@@ -87,7 +87,7 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
           <img
             src={icon.src}
             alt={icon.alt}
-            className={`w-16 h-16 transition-all duration-700 cursor-pointer ${
+            className={`w-16 h-16 transition-all duration-700 cursor-pointer -translate-y-0.5 ${
               activeIndex === index 
                 ? 'scale-110' 
                 : 'hover:scale-110'
