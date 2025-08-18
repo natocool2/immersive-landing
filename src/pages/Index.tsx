@@ -92,7 +92,7 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.8 }}
           >
-            <GlassInput placeholder="Como posso ajudar você hoje?" />
+            <GlassInput placeholder="Build anything" />
           </motion.div>
 
           <motion.div
