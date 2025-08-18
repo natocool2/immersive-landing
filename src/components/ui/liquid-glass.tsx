@@ -78,7 +78,7 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string }> = ({
 }) => (
   <GlassEffect
     href={href}
-    className="rounded-3xl p-3 hover:p-4 hover:rounded-4xl"
+    className="rounded-3xl p-3"
   >
     <div className="flex items-center justify-center gap-2 rounded-3xl p-3 py-0 px-0.5 overflow-hidden">
       {icons.map((icon, index) => (
@@ -122,7 +122,7 @@ const GlassButton: React.FC<{ children: React.ReactNode; href?: string }> = ({
 const GlassInput: React.FC<{ placeholder?: string }> = ({
   placeholder = "Como posso ajudar você hoje?",
 }) => (
-  <GlassEffect className="rounded-3xl px-6 py-4 hover:px-7 hover:py-5 overflow-hidden w-full max-w-2xl">
+  <GlassEffect className="rounded-3xl px-6 py-4 overflow-hidden w-full max-w-2xl">
     <input
       type="text"
       placeholder={placeholder}
