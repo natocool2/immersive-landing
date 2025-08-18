@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { AppleStyleDock } from "@/components/AppleStyleDock";
+import { LiquidGlassDock } from "@/components/LiquidGlassDock";
+import { GlassInput } from "@/components/ui/liquid-glass";
 
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -85,14 +86,14 @@ const Index = () => {
             Easynet Pro
           </motion.h1>
           
-          <motion.p 
-            className="text-xl md:text-2xl mb-8 text-white/80 leading-relaxed"
+          <motion.div 
+            className="mb-8 w-full max-w-2xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.8 }}
           >
-            Uma experiência visual imersiva onde arte e tecnologia se encontram
-          </motion.p>
+            <GlassInput placeholder="Como posso ajudar você hoje?" />
+          </motion.div>
 
           <motion.div
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
@@ -159,8 +160,8 @@ const Index = () => {
         }}
       />
       
-      {/* Dock Footer */}
-      <AppleStyleDock />
+      {/* Liquid Glass Dock Footer */}
+      <LiquidGlassDock />
     </div>
   );
 };
