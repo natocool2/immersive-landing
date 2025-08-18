@@ -81,7 +81,7 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
     href={href}
     className="rounded-3xl p-3"
   >
-    <div className="flex items-center justify-center gap-2 rounded-3xl p-3 py-0 px-0.5 overflow-hidden">
+    <div className="flex items-center justify-center gap-2 rounded-3xl p-3 py-0 px-0.5">
       {icons.map((icon, index) => (
         <div key={index} className="relative">
           <img
@@ -99,7 +99,7 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
             onClick={icon.onClick}
           />
           {activeIndex === index && (
-            <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-black/60 rounded-full transition-all duration-300" />
+            <div className="absolute bottom-[-7px] left-1/2 transform -translate-x-1/2 w-2 h-2 bg-black/60 rounded-full transition-all duration-300" />
           )}
         </div>
       ))}
