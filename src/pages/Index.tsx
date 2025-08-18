@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { AppleStyleDock } from "@/components/AppleStyleDock";
 
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -157,6 +158,9 @@ const Index = () => {
           ease: "linear" 
         }}
       />
+      
+      {/* Dock Footer */}
+      <AppleStyleDock />
     </div>
   );
 };
