@@ -82,7 +82,7 @@ const Index = () => {
               ease: "linear" 
             }}
           >
-            Digital Canvas
+            Easynet Pro
           </motion.h1>
           
           <motion.p 
