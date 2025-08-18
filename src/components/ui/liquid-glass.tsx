@@ -83,21 +83,25 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
   >
     <div className="flex items-center justify-center gap-2 rounded-3xl p-3 py-0 px-0.5 overflow-hidden">
       {icons.map((icon, index) => (
-        <img
-          key={index}
-          src={icon.src}
-          alt={icon.alt}
-          className={`w-16 h-16 transition-all duration-700 cursor-pointer ${
-            activeIndex === index 
-              ? 'ring-2 ring-white/50 ring-offset-2 ring-offset-transparent scale-110' 
-              : 'hover:scale-110'
-          }`}
-          style={{
-            transformOrigin: "center center",
-            transitionTimingFunction: "cubic-bezier(0.175, 0.885, 0.32, 2.2)",
-          }}
-          onClick={icon.onClick}
-        />
+        <div key={index} className="flex flex-col items-center gap-1">
+          <img
+            src={icon.src}
+            alt={icon.alt}
+            className={`w-16 h-16 transition-all duration-700 cursor-pointer ${
+              activeIndex === index 
+                ? 'scale-110' 
+                : 'hover:scale-110'
+            }`}
+            style={{
+              transformOrigin: "center center",
+              transitionTimingFunction: "cubic-bezier(0.175, 0.885, 0.32, 2.2)",
+            }}
+            onClick={icon.onClick}
+          />
+          {activeIndex === index && (
+            <div className="w-2 h-2 bg-black/60 rounded-full transition-all duration-300" />
+          )}
+        </div>
       ))}
     </div>
   </GlassEffect>
