@@ -3,8 +3,42 @@ import { useEffect, useState } from "react";
 import { LiquidGlassDock } from "@/components/LiquidGlassDock";
 import { GlassInput } from "@/components/ui/liquid-glass";
 
+const contentData = [
+  {
+    title: "Easynet Pro",
+    subtitle: "Build anything",
+    buttons: ["Explorar", "Saber Mais"]
+  },
+  {
+    title: "Finder",
+    subtitle: "Organize your files",
+    buttons: ["Browse Files", "Recent Items"]
+  },
+  {
+    title: "ChatGPT",
+    subtitle: "AI Assistant",
+    buttons: ["Start Chat", "Examples"]
+  },
+  {
+    title: "Maps",
+    subtitle: "Navigate anywhere",
+    buttons: ["Directions", "Explore"]
+  },
+  {
+    title: "Safari",
+    subtitle: "Browse the web",
+    buttons: ["New Tab", "Bookmarks"]
+  },
+  {
+    title: "Steam",
+    subtitle: "Game library",
+    buttons: ["Library", "Store"]
+  }
+];
+
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [activeContent, setActiveContent] = useState(0);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -82,8 +116,9 @@ const Index = () => {
               repeat: Infinity, 
               ease: "linear" 
             }}
+            key={activeContent}
           >
-            Easynet Pro
+            {contentData[activeContent].title}
           </motion.h1>
           
           <motion.div 
@@ -91,8 +126,9 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.8 }}
+            key={`input-${activeContent}`}
           >
-            <GlassInput placeholder="Build anything" />
+            <GlassInput placeholder={contentData[activeContent].subtitle} />
           </motion.div>
 
           <motion.div
@@ -100,6 +136,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.8 }}
+            key={`buttons-${activeContent}`}
           >
             <motion.button
               className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white font-medium text-lg hover:bg-white/20 transition-all duration-300 hover:scale-105"
@@ -119,7 +156,7 @@ const Index = () => {
                 boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
               }}
             >
-              Explorar
+              {contentData[activeContent].buttons[0]}
             </motion.button>
             
             <motion.button
@@ -127,7 +164,7 @@ const Index = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Saber Mais
+              {contentData[activeContent].buttons[1]}
             </motion.button>
           </motion.div>
         </motion.div>
@@ -161,7 +198,7 @@ const Index = () => {
       />
       
       {/* Liquid Glass Dock Footer */}
-      <LiquidGlassDock />
+      <LiquidGlassDock onIconClick={setActiveContent} activeIcon={activeContent} />
     </div>
   );
 };

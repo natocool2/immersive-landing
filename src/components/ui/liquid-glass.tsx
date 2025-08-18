@@ -72,9 +72,10 @@ const GlassEffect: React.FC<GlassEffectProps> = ({
 };
 
 // Dock Component
-const GlassDock: React.FC<{ icons: DockIcon[]; href?: string }> = ({
+const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: number }> = ({
   icons,
   href,
+  activeIndex = 0,
 }) => (
   <GlassEffect
     href={href}
@@ -86,7 +87,11 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string }> = ({
           key={index}
           src={icon.src}
           alt={icon.alt}
-          className="w-16 h-16 transition-all duration-700 hover:scale-110 cursor-pointer"
+          className={`w-16 h-16 transition-all duration-700 cursor-pointer ${
+            activeIndex === index 
+              ? 'ring-2 ring-white/50 ring-offset-2 ring-offset-transparent scale-110' 
+              : 'hover:scale-110'
+          }`}
           style={{
             transformOrigin: "center center",
             transitionTimingFunction: "cubic-bezier(0.175, 0.885, 0.32, 2.2)",
