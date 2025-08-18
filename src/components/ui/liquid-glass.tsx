@@ -81,7 +81,7 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
     href={href}
     className="rounded-3xl p-3"
   >
-    <div className="flex items-center justify-center gap-2 rounded-3xl p-3 py-0 px-0.5 overflow-hidden">
+    <div className="flex items-center justify-center gap-2 rounded-3xl p-3 py-0 px-0.5 relative">
       {icons.map((icon, index) => (
         <div key={index} className="relative">
           <img
@@ -98,11 +98,18 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
             }}
             onClick={icon.onClick}
           />
-          {activeIndex === index && (
-            <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-black/60 rounded-full transition-all duration-300" />
-          )}
         </div>
       ))}
+      {/* Indicador movido para fora dos ícones */}
+      {activeIndex !== undefined && (
+        <div 
+          className="absolute bottom-0 w-2 h-2 bg-black/60 rounded-full transition-all duration-300"
+          style={{
+            left: `${20 + (activeIndex * 72)}px`,
+            transform: 'translateX(-50%)'
+          }}
+        />
+      )}
     </div>
   </GlassEffect>
 );
