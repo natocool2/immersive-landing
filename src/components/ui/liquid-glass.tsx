@@ -120,7 +120,7 @@ const GlassButton: React.FC<{ children: React.ReactNode; href?: string }> = ({
 
 // Input Component
 const GlassInput: React.FC<{ placeholder?: string }> = ({
-  placeholder = "Como posso ajudar você hoje?",
+  placeholder = "Build anything",
 }) => (
   <GlassEffect className="rounded-3xl px-6 py-4 overflow-hidden w-full max-w-2xl">
     <input
