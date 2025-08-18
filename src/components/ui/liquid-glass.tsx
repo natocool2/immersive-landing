@@ -99,7 +99,7 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
             onClick={icon.onClick}
           />
           {activeIndex === index && (
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white/80 border border-black/40 rounded-full transition-all duration-300 z-20" style={{ bottom: '-12px' }} />
+            <div className="absolute left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white/80 border border-black/40 rounded-full transition-all duration-300 z-20" style={{ bottom: '-15px' }} />
           )}
         </div>
       ))}
