@@ -1,4 +1,5 @@
 import { GlassDock, GlassFilter } from '@/components/ui/liquid-glass';
+import { useNavigate } from 'react-router-dom';
 
 const dockIcons = [
   {
@@ -39,9 +40,18 @@ interface LiquidGlassDockProps {
 }
 
 export function LiquidGlassDock({ onIconClick, activeIcon }: LiquidGlassDockProps) {
+  const navigate = useNavigate();
+  
   const iconsWithHandlers = dockIcons.map((icon, index) => ({
     ...icon,
-    onClick: () => onIconClick(index),
+    onClick: () => {
+      if (index === 4 && icon.alt === "Safari") {
+        // Navigate to browser when Safari is clicked
+        navigate('/browser');
+      } else {
+        onIconClick(index);
+      }
+    },
   }));
 
   return (
