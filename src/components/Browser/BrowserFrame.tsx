@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { RefreshCw, ArrowLeft, ArrowRight, Home, Lock, Unlock } from "lucide-react";
+import { RefreshCw, ArrowLeft, ArrowRight, Home, Lock, Unlock, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface BrowserFrameProps {
@@ -20,15 +20,28 @@ export const BrowserFrame = ({
   const [isLoading, setIsLoading] = useState(false);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const isSecure = url.startsWith('https://');
 
   const handleNavigate = (newUrl: string) => {
     try {
+      setLoadError(false);
       // Ensure URL has protocol
       if (!newUrl.startsWith('http://') && !newUrl.startsWith('https://')) {
         newUrl = 'https://' + newUrl;
+      }
+      
+      // Check if it's a blocked domain and suggest alternatives
+      const blockedDomains = ['google.com', 'youtube.com', 'facebook.com', 'twitter.com', 'instagram.com'];
+      const domain = new URL(newUrl).hostname.replace('www.', '');
+      
+      if (blockedDomains.some(blocked => domain.includes(blocked))) {
+        // Redirect to alternative or proxy
+        if (domain.includes('google.com')) {
+          newUrl = 'https://duckduckgo.com';
+        }
       }
       
       setIsLoading(true);
@@ -36,6 +49,8 @@ export const BrowserFrame = ({
       setInputUrl(newUrl);
     } catch (error) {
       console.error('Navigation error:', error);
+      setIsLoading(false);
+      setLoadError(true);
     }
   };
 
@@ -47,6 +62,7 @@ export const BrowserFrame = ({
 
   const handleRefresh = () => {
     if (iframeRef.current) {
+      setLoadError(false);
       setIsLoading(true);
       iframeRef.current.src = iframeRef.current.src;
     }
@@ -70,6 +86,7 @@ export const BrowserFrame = ({
 
     const handleLoad = () => {
       setIsLoading(false);
+      setLoadError(false);
       try {
         const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
         if (iframeDoc?.title) {
@@ -81,9 +98,29 @@ export const BrowserFrame = ({
       }
     };
 
+    const handleError = () => {
+      setIsLoading(false);
+      setLoadError(true);
+      console.log('Failed to load:', url);
+    };
+
     iframe.addEventListener('load', handleLoad);
-    return () => iframe.removeEventListener('load', handleLoad);
-  }, [onTitleChange]);
+    iframe.addEventListener('error', handleError);
+    
+    // Set a timeout to detect if page refuses to load
+    const timeout = setTimeout(() => {
+      if (isLoading) {
+        setIsLoading(false);
+        setLoadError(true);
+      }
+    }, 10000);
+
+    return () => {
+      iframe.removeEventListener('load', handleLoad);
+      iframe.removeEventListener('error', handleError);
+      clearTimeout(timeout);
+    };
+  }, [onTitleChange, url, isLoading]);
 
   return (
     <motion.div
@@ -160,7 +197,7 @@ export const BrowserFrame = ({
         {/* Home Button */}
         <motion.button
           className="p-2 rounded-lg hover:bg-white/10 text-white transition-colors"
-          onClick={() => handleNavigate('https://google.com')}
+          onClick={() => handleNavigate('https://duckduckgo.com')}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -180,13 +217,55 @@ export const BrowserFrame = ({
           </div>
         )}
         
+        {loadError && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 z-10 p-8">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center text-white"
+            >
+              <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+              <h3 className="text-xl font-bold mb-2">Não foi possível carregar a página</h3>
+              <p className="text-white/70 mb-4 max-w-md">
+                Este site recusou a conexão. Muitos sites como Google, YouTube e Facebook 
+                bloqueiam carregamento em frames por segurança.
+              </p>
+              <div className="flex gap-3 justify-center">
+                <motion.button
+                  className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg text-white transition-colors"
+                  onClick={() => handleNavigate('https://duckduckgo.com')}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Ir para DuckDuckGo
+                </motion.button>
+                <motion.button
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors"
+                  onClick={handleRefresh}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Tentar novamente
+                </motion.button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+        
         <iframe
           ref={iframeRef}
           src={url}
           className="w-full h-full border-0 rounded-b-lg"
           title="Browser Content"
-          sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-presentation"
-          onLoad={() => setIsLoading(false)}
+          sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-presentation allow-navigation"
+          onLoad={() => {
+            setIsLoading(false);
+            setLoadError(false);
+          }}
+          onError={() => {
+            setIsLoading(false);
+            setLoadError(true);
+          }}
         />
       </div>
     </motion.div>

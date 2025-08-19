@@ -17,9 +17,9 @@ export const BrowserContainer = () => {
   const [tabs, setTabs] = useState<Tab[]>([
     { 
       id: '1', 
-      url: 'https://google.com', 
-      title: 'Google',
-      favicon: 'https://www.google.com/favicon.ico'
+      url: 'https://duckduckgo.com', 
+      title: 'DuckDuckGo',
+      favicon: 'https://duckduckgo.com/favicon.ico'
     }
   ]);
   const [activeTabId, setActiveTabId] = useState('1');
@@ -27,7 +27,7 @@ export const BrowserContainer = () => {
   const createNewTab = useCallback(() => {
     const newTab: Tab = {
       id: Date.now().toString(),
-      url: 'https://google.com',
+      url: 'https://duckduckgo.com',
       title: 'Nova Aba',
     };
     setTabs(prev => [...prev, newTab]);
@@ -41,7 +41,7 @@ export const BrowserContainer = () => {
         // Create a new tab if all tabs are closed
         const newTab: Tab = {
           id: Date.now().toString(),
-          url: 'https://google.com',
+          url: 'https://duckduckgo.com',
           title: 'Nova Aba',
         };
         return [newTab];
