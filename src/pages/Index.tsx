@@ -6,7 +6,6 @@ import { GlassInput } from "@/components/ui/liquid-glass";
 import { useAuth } from "@/contexts/AuthContext";
 import UserMenu from "@/components/UserMenu";
 import { Button } from "@/components/ui/button";
-import Header from "@/components/Header";
 
 const contentData = [
   {
@@ -69,9 +68,20 @@ const Index = () => {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden">
-      {/* Header */}
-      <div className="absolute top-0 left-0 right-0 z-50">
-        <Header />
+      {/* Header with Auth */}
+      <div className="absolute top-4 right-4 z-50">
+        {user ? (
+          <UserMenu />
+        ) : (
+          <Button 
+            onClick={() => navigate('/auth')} 
+            variant="outline" 
+            size="sm" 
+            className="rounded-full text-xs md:text-sm"
+          >
+            Sign In
+          </Button>
+        )}
       </div>
       {/* Fundo gradiente animado */}
       <div className="absolute inset-0 bg-gradient-animated animate-gradient" />
