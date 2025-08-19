@@ -72,6 +72,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signInWithProvider = async (provider: 'google' | 'github' | 'discord') => {
+    console.log('Starting OAuth signin with provider:', provider);
+    console.log('Current window.location.origin:', window.location.origin);
+    
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
@@ -82,6 +85,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       },
     });
+    
+    console.log('OAuth signin result:', { error });
     return { error };
   };
 
