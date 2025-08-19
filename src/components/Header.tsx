@@ -13,19 +13,21 @@ const Header = () => {
   return (
     <header className="w-full px-4 md:px-6 py-1.5 bg-transparent">
       <div className="w-full flex items-center justify-between">
-        <div className="font-bold text-lg md:text-xl text-black">
-          Easynet Pro
+        <div className="flex items-center">
+          <div className="w-8 h-8 bg-white rounded-sm flex items-center justify-center text-black font-bold text-sm">
+            E
+          </div>
         </div>
         
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center space-x-8">
-          <Button variant="ghost" size="sm" className="text-gray-700 hover:text-black">
+          <Button variant="ghost" size="sm" className="text-white hover:text-white/80">
             Ingenious Gen
           </Button>
-          <Button variant="ghost" size="sm" className="text-gray-700 hover:text-black">
+          <Button variant="ghost" size="sm" className="text-white hover:text-white/80">
             Events
           </Button>
-          <Button variant="ghost" size="icon" className="text-gray-700 hover:text-black">
+          <Button variant="ghost" size="icon" className="text-white hover:text-white/80">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="5" cy="12" r="2" fill="currentColor"/>
               <circle cx="12" cy="12" r="2" fill="currentColor"/>
@@ -54,7 +56,7 @@ const Header = () => {
 
         {/* Mobile/Tablet Navigation */}
         <div className="flex items-center space-x-2 lg:hidden">
-          <Button variant="ghost" size="icon" className="text-gray-700 hover:text-black">
+          <Button variant="ghost" size="icon" className="text-white hover:text-white/80">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="5" cy="12" r="2" fill="currentColor"/>
               <circle cx="12" cy="12" r="2" fill="currentColor"/>
@@ -82,7 +84,7 @@ const Header = () => {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="text-gray-700 hover:text-black"
+            className="text-white hover:text-white/80"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -94,10 +96,10 @@ const Header = () => {
       {isMenuOpen && (
         <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200">
           <div className="flex flex-col space-y-2 pt-4">
-            <Button variant="ghost" size="sm" className="text-gray-700 hover:text-black justify-start">
+            <Button variant="ghost" size="sm" className="text-white hover:text-white/80 justify-start">
               Ingenious Gen
             </Button>
-            <Button variant="ghost" size="sm" className="text-gray-700 hover:text-black justify-start">
+            <Button variant="ghost" size="sm" className="text-white hover:text-white/80 justify-start">
               Events
             </Button>
           </div>
