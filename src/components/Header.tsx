@@ -13,9 +13,11 @@ const Header = () => {
   return (
     <header className="w-full px-4 md:px-6 py-1.5 bg-transparent">
       <div className="w-full flex items-center justify-between">
-        <div className="font-bold text-lg md:text-xl text-black">
-          Easynet Pro
-        </div>
+        <img 
+          src="/lovable-uploads/08de0c6d-a943-40ea-953a-e040d185cb65.png" 
+          alt="Logo" 
+          className="h-8 md:h-10 w-auto"
+        />
         
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center space-x-8">
