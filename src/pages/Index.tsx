@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { LiquidGlassDock } from "@/components/LiquidGlassDock";
 import { GlassInput } from "@/components/ui/liquid-glass";
+import { useAuth } from "@/contexts/AuthContext";
+import UserMenu from "@/components/UserMenu";
+import { Button } from "@/components/ui/button";
 
 const contentData = [
   {
@@ -39,6 +43,16 @@ const contentData = [
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [activeContent, setActiveContent] = useState(0);
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -54,6 +68,16 @@ const Index = () => {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden">
+      {/* Header with Auth */}
+      <div className="absolute top-4 right-4 z-50">
+        {user ? (
+          <UserMenu />
+        ) : (
+          <Button onClick={() => navigate('/auth')} variant="outline" className="glass-effect">
+            Entrar
+          </Button>
+        )}
+      </div>
       {/* Fundo gradiente animado */}
       <div className="absolute inset-0 bg-gradient-animated animate-gradient" />
       
