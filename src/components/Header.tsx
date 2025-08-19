@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import UserMenu from "@/components/UserMenu";
+import logo from "@/assets/logo.png";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,9 +15,7 @@ const Header = () => {
     <header className="w-full px-4 md:px-6 py-1.5 bg-transparent">
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center">
-          <div className="w-8 h-8 bg-white rounded-sm flex items-center justify-center text-black font-bold text-sm">
-            E
-          </div>
+          <img src={logo} alt="Logo" className="h-8 w-8" />
         </div>
         
         {/* Desktop Navigation */}
