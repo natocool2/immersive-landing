@@ -73,8 +73,13 @@ const Index = () => {
         {user ? (
           <UserMenu />
         ) : (
-          <Button onClick={() => navigate('/auth')} variant="outline" className="glass-effect">
-            Entrar
+          <Button 
+            onClick={() => navigate('/auth')} 
+            variant="outline" 
+            size="sm" 
+            className="rounded-full text-xs md:text-sm"
+          >
+            Sign In
           </Button>
         )}
       </div>
