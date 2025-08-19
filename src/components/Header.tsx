@@ -1,9 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import UserMenu from "@/components/UserMenu";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <header className="w-full px-4 md:px-6 py-1.5 bg-transparent">
@@ -33,9 +38,18 @@ const Header = () => {
               <circle cx="19" cy="19" r="2" fill="currentColor"/>
             </svg>
           </Button>
-          <Button variant="outline" size="sm" className="rounded-full text-xs md:text-sm">
-            Sign In
-          </Button>
+          {user ? (
+            <UserMenu />
+          ) : (
+            <Button 
+              onClick={() => navigate('/auth')} 
+              variant="outline" 
+              size="sm" 
+              className="rounded-full text-xs md:text-sm"
+            >
+              Sign In
+            </Button>
+          )}
         </nav>
 
         {/* Mobile/Tablet Navigation */}
@@ -53,9 +67,18 @@ const Header = () => {
               <circle cx="19" cy="19" r="2" fill="currentColor"/>
             </svg>
           </Button>
-          <Button variant="outline" size="sm" className="rounded-full text-xs">
-            Sign In
-          </Button>
+          {user ? (
+            <UserMenu />
+          ) : (
+            <Button 
+              onClick={() => navigate('/auth')} 
+              variant="outline" 
+              size="sm" 
+              className="rounded-full text-xs"
+            >
+              Sign In
+            </Button>
+          )}
           <Button 
             variant="ghost" 
             size="icon" 
