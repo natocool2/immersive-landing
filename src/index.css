@@ -124,3 +124,33 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  /* Gradient animado para o fundo */
+  .bg-gradient-animated {
+    background: linear-gradient(
+      -45deg,
+      hsl(var(--gradient-1)),
+      hsl(var(--gradient-2)),
+      hsl(var(--gradient-3)),
+      hsl(var(--gradient-4))
+    );
+    background-size: 400% 400%;
+  }
+
+  .animate-gradient {
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
