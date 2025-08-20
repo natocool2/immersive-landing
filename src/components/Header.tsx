@@ -11,7 +11,7 @@ const Header = () => {
   const { user } = useAuth();
 
   return (
-    <header className="w-full px-4 pt-2.5 pb-1.5 bg-transparent">
+    <header className="w-full px-4 sm:px-4 md:px-4 lg:px-4 pt-2.5 pb-1.5 bg-transparent">
       <div className="w-full flex items-center justify-between">
         <img 
           src="/lovable-uploads/08de0c6d-a943-40ea-953a-e040d185cb65.png" 
