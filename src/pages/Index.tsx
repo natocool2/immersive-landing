@@ -86,20 +86,6 @@ const Index = () => {
         <Header />
       </div>
 
-      {/* Botão Fullscreen */}
-      <motion.button
-        onClick={toggleFullscreen}
-        className="absolute top-4 right-4 z-50 p-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        title={isFullscreen ? "Sair do fullscreen" : "Entrar em fullscreen"}
-      >
-        {isFullscreen ? (
-          <Minimize className="w-5 h-5" />
-        ) : (
-          <Maximize className="w-5 h-5" />
-        )}
-      </motion.button>
       {/* Fundo gradiente animado */}
       <div className="absolute inset-0 bg-gradient-animated animate-gradient" />
       
@@ -245,6 +231,21 @@ const Index = () => {
       
       {/* Liquid Glass Dock Footer */}
       <LiquidGlassDock onIconClick={setActiveContent} activeIcon={activeContent} />
+      
+      {/* Botão Fullscreen */}
+      <motion.button
+        onClick={toggleFullscreen}
+        className="absolute bottom-4 right-4 z-50 p-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        title={isFullscreen ? "Sair do fullscreen" : "Entrar em fullscreen"}
+      >
+        {isFullscreen ? (
+          <Minimize className="w-5 h-5" />
+        ) : (
+          <Maximize className="w-5 h-5" />
+        )}
+      </motion.button>
     </div>
   );
 };
