@@ -245,8 +245,8 @@ const Auth = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      placeholder="Escolha uma senha"
-                      minLength={6}
+                      placeholder="Pelo menos 8 caracteres"
+                      minLength={8}
                     />
                   </div>
                   <Button type="submit" className="w-full" disabled={loading}>
