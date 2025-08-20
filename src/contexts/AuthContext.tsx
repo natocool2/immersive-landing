@@ -48,23 +48,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    // Input validation
+    if (!email || !password) {
+      return { error: { message: 'Email e senha são obrigatórios' } };
+    }
+    
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: email.trim().toLowerCase(),
       password,
     });
+    
+    // Don't expose detailed auth errors to prevent enumeration attacks
+    if (error && error.message.includes('Invalid')) {
+      return { error: { message: 'Email ou senha inválidos' } };
+    }
+    
     return { error };
   };
 
   const signUp = async (email: string, password: string, displayName?: string) => {
+    // Input validation
+    if (!email || !password) {
+      return { error: { message: 'Email e senha são obrigatórios' } };
+    }
+    
+    // Password strength validation
+    if (password.length < 8) {
+      return { error: { message: 'A senha deve ter pelo menos 8 caracteres' } };
+    }
+    
+    // Sanitize display name
+    const sanitizedDisplayName = displayName?.trim().substring(0, 50) || '';
+    
     const redirectUrl = `${window.location.origin}/`;
     
     const { error } = await supabase.auth.signUp({
-      email,
+      email: email.trim().toLowerCase(),
       password,
       options: {
         emailRedirectTo: redirectUrl,
         data: {
-          display_name: displayName,
+          display_name: sanitizedDisplayName,
         }
       }
     });
