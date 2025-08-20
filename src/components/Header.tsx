@@ -13,11 +13,13 @@ const Header = () => {
   return (
     <header className="w-full px-4 md:px-6 pt-2.5 pb-1.5 bg-transparent">
       <div className="w-full flex items-center justify-between">
-        <img 
-          src="/lovable-uploads/08de0c6d-a943-40ea-953a-e040d185cb65.png" 
-          alt="Logo" 
-          className="h-8 md:h-10 w-auto -ml-[10px]"
-        />
+        <div className="transform translate-x-[-10px]">
+          <img 
+            src="/lovable-uploads/08de0c6d-a943-40ea-953a-e040d185cb65.png" 
+            alt="Logo" 
+            className="h-8 md:h-10 w-auto"
+          />
+        </div>
         
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center space-x-8">
@@ -43,14 +45,16 @@ const Header = () => {
           {user ? (
             <UserMenu />
           ) : (
-            <Button 
-              onClick={() => navigate('/auth')} 
-              variant="outline" 
-              size="sm" 
-              className="rounded-full text-xs md:text-sm mr-[14px]"
-            >
-              Sign In
-            </Button>
+            <div className="transform translate-x-[7px]">
+              <Button 
+                onClick={() => navigate('/auth')} 
+                variant="outline" 
+                size="sm" 
+                className="rounded-full text-xs md:text-sm"
+              >
+                Sign In
+              </Button>
+            </div>
           )}
         </nav>
 
@@ -72,14 +76,16 @@ const Header = () => {
           {user ? (
             <UserMenu />
           ) : (
-            <Button 
-              onClick={() => navigate('/auth')} 
-              variant="outline" 
-              size="sm" 
-              className="rounded-full text-xs mr-[14px]"
-            >
-              Sign In
-            </Button>
+            <div className="transform translate-x-[7px]">
+              <Button 
+                onClick={() => navigate('/auth')} 
+                variant="outline" 
+                size="sm" 
+                className="rounded-full text-xs"
+              >
+                Sign In
+              </Button>
+            </div>
           )}
           <Button 
             variant="ghost" 
