@@ -47,7 +47,7 @@ const Header = () => {
               onClick={() => navigate('/auth')} 
               variant="outline" 
               size="sm" 
-              className="rounded-full text-xs md:text-sm mr-[7px]"
+              className="rounded-full text-xs md:text-sm mr-[14px]"
             >
               Sign In
             </Button>
@@ -76,7 +76,7 @@ const Header = () => {
               onClick={() => navigate('/auth')} 
               variant="outline" 
               size="sm" 
-              className="rounded-full text-xs mr-[7px]"
+              className="rounded-full text-xs mr-[14px]"
             >
               Sign In
             </Button>
