@@ -50,12 +50,7 @@ const Index = () => {
   const navigate = useNavigate();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
-  // Authentication guard - redirect to auth if not logged in
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate('/auth');
-    }
-  }, [user, loading, navigate]);
+  // Remove authentication guard to allow public access to landing page
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
