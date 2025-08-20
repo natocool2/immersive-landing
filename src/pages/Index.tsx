@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import { useFullscreen } from "@/hooks/useFullscreen";
 import { Maximize, Minimize } from "lucide-react";
-import { StripePlansList } from "@/components/StripePlansList";
 
 const contentData = [
   {
@@ -201,18 +200,6 @@ const Index = () => {
             >
               {contentData[activeContent].buttons[1]}
             </motion.button>
-          </motion.div>
-
-          {/* Stripe Plans List */}
-          <motion.div
-            className="mt-12 w-full max-w-6xl"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2, duration: 0.8 }}
-          >
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <StripePlansList />
-            </div>
           </motion.div>
         </motion.div>
       </div>
