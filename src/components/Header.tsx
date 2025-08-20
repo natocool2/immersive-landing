@@ -16,7 +16,7 @@ const Header = () => {
         <img 
           src="/lovable-uploads/08de0c6d-a943-40ea-953a-e040d185cb65.png" 
           alt="Logo" 
-          className="h-8 md:h-10 w-auto"
+          className="h-8 md:h-10 w-auto -ml-[10px]"
         />
         
         {/* Desktop Navigation */}
@@ -47,7 +47,7 @@ const Header = () => {
               onClick={() => navigate('/auth')} 
               variant="outline" 
               size="sm" 
-              className="rounded-full text-xs md:text-sm"
+              className="rounded-full text-xs md:text-sm mr-[7px]"
             >
               Sign In
             </Button>
@@ -76,7 +76,7 @@ const Header = () => {
               onClick={() => navigate('/auth')} 
               variant="outline" 
               size="sm" 
-              className="rounded-full text-xs"
+              className="rounded-full text-xs mr-[7px]"
             >
               Sign In
             </Button>
