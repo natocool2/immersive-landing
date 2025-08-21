@@ -10,6 +10,7 @@ import Header from "@/components/Header";
 import { useFullscreen } from "@/hooks/useFullscreen";
 import { Maximize, Minimize, Trees, Calendar, Menu, CalendarClock, Users, Dog, Check, Star, MapPin, ShieldCheck, Leaf, Flame, Moon, WifiOff, Book, Coffee } from "lucide-react";
 
+// MistHaven content moved directly into Steam section
 const contentData = [
   {
     title: "Easynet Pro",
