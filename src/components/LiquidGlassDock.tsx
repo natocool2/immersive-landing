@@ -47,7 +47,7 @@ export function LiquidGlassDock({ onIconClick, activeIcon }: LiquidGlassDockProp
   return (
     <>
       <GlassFilter />
-      <div className='absolute bottom-2 left-0 right-0 mx-[75px] z-50'>
+      <div className='absolute bottom-2 left-0 right-0 mx-[75px] flex justify-center z-50'>
         <GlassDock icons={iconsWithHandlers} activeIndex={activeIcon} />
       </div>
     </>
