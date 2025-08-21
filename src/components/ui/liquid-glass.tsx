@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // Types
 interface GlassEffectProps {
@@ -76,36 +77,98 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
   icons,
   href,
   activeIndex = 0,
-}) => (
-  <GlassEffect
-    href={href}
-    className="rounded-3xl p-3 max-w-[calc(100vw-150px)]"
-  >
-    <div className="flex items-center gap-2 rounded-3xl p-2.5 py-0 px-0.5 scrollbar-hide">
-      {icons.map((icon, index) => (
-        <div key={index} className="relative flex-shrink-0">
-          <img
-            src={icon.src}
-            alt={icon.alt}
-            className={`w-16 h-16 aspect-square object-contain transition-all duration-700 cursor-pointer -translate-y-px ${
-              activeIndex === index 
-                ? 'scale-110' 
-                : 'hover:scale-110'
-            }`}
-            style={{
-              transformOrigin: "center center",
-              transitionTimingFunction: "cubic-bezier(0.175, 0.885, 0.32, 2.2)",
-            }}
-            onClick={icon.onClick}
-          />
-          {activeIndex === index && (
-            <div className="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-2 h-2 bg-black/60 rounded-full transition-all duration-300" />
-          )}
-        </div>
-      ))}
-    </div>
-  </GlassEffect>
-);
+}) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(false);
+
+  const checkScrollButtons = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setShowLeftArrow(scrollLeft > 0);
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth);
+    }
+  };
+
+  useEffect(() => {
+    checkScrollButtons();
+    const scrollElement = scrollRef.current;
+    if (scrollElement) {
+      scrollElement.addEventListener('scroll', checkScrollButtons);
+      window.addEventListener('resize', checkScrollButtons);
+      return () => {
+        scrollElement.removeEventListener('scroll', checkScrollButtons);
+        window.removeEventListener('resize', checkScrollButtons);
+      };
+    }
+  }, []);
+
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <GlassEffect
+      href={href}
+      className="rounded-3xl p-3 max-w-[calc(100vw-150px)] relative"
+    >
+      {/* Left Arrow */}
+      {showLeftArrow && (
+        <button
+          onClick={scrollLeft}
+          className="absolute left-2 top-1/2 transform -translate-y-1/2 z-40 p-1 rounded-full bg-black/20 hover:bg-black/30 transition-all duration-200"
+        >
+          <ChevronLeft size={20} className="text-white" />
+        </button>
+      )}
+
+      {/* Right Arrow */}
+      {showRightArrow && (
+        <button
+          onClick={scrollRight}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 z-40 p-1 rounded-full bg-black/20 hover:bg-black/30 transition-all duration-200"
+        >
+          <ChevronRight size={20} className="text-white" />
+        </button>
+      )}
+
+      <div 
+        ref={scrollRef}
+        className="flex items-center gap-2 rounded-3xl p-2.5 py-0 px-0.5 scrollbar-hide overflow-x-auto"
+      >
+        {icons.map((icon, index) => (
+          <div key={index} className="relative flex-shrink-0">
+            <img
+              src={icon.src}
+              alt={icon.alt}
+              className={`w-16 h-16 aspect-square object-contain transition-all duration-700 cursor-pointer -translate-y-px ${
+                activeIndex === index 
+                  ? 'scale-110' 
+                  : 'hover:scale-110'
+              }`}
+              style={{
+                transformOrigin: "center center",
+                transitionTimingFunction: "cubic-bezier(0.175, 0.885, 0.32, 2.2)",
+              }}
+              onClick={icon.onClick}
+            />
+            {activeIndex === index && (
+              <div className="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-2 h-2 bg-black/60 rounded-full transition-all duration-300" />
+            )}
+          </div>
+        ))}
+      </div>
+    </GlassEffect>
+  );
+};
 
 // Button Component
 const GlassButton: React.FC<{ children: React.ReactNode; href?: string }> = ({
