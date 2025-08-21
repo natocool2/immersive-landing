@@ -132,7 +132,7 @@ const Index = () => {
       {activeContent === 5 ? (
         // MistHaven Content
         <div className="relative z-10 h-full w-full overflow-y-auto">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:py-10 pt-8 sm:pt-20 md:pt-8 lg:pt-20">
+          <div className="max-w-7xl mx-auto">
             <div className="bg-white/5 border border-white/15 rounded-3xl p-4 sm:p-6 lg:p-8 backdrop-blur-xl shadow-[0_10px_60px_-15px_rgba(0,0,0,0.6)]">
               
               {/* Header */}
