@@ -124,7 +124,7 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
       {showLeftArrow && (
         <button
           onClick={scrollLeft}
-          className="absolute left-[-9px] top-1/2 transform -translate-y-1/2 z-40 p-1 rounded-full bg-black/20 hover:bg-black/30 transition-all duration-200"
+          className="absolute left-[-8px] top-1/2 transform -translate-y-1/2 z-40 p-1 rounded-full bg-black/20 hover:bg-black/30 transition-all duration-200"
         >
           <ChevronLeft size={20} className="text-white" />
         </button>
@@ -134,7 +134,7 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
       {showRightArrow && (
         <button
           onClick={scrollRight}
-          className="absolute right-[-9px] top-1/2 transform -translate-y-1/2 z-40 p-1 rounded-full bg-black/20 hover:bg-black/30 transition-all duration-200"
+          className="absolute right-[-8px] top-1/2 transform -translate-y-1/2 z-40 p-1 rounded-full bg-black/20 hover:bg-black/30 transition-all duration-200"
         >
           <ChevronRight size={20} className="text-white" />
         </button>

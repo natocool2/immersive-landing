@@ -82,7 +82,7 @@ const Index = () => {
   }
 
   return (
-    <div className="relative h-[100vh] w-[100vw] overflow-hidden" data-main-content>
+    <div className="relative h-[100vh] w-[100vw] overflow-hidden">
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-50">
         <Header />
