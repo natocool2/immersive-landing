@@ -132,11 +132,6 @@ const Index = () => {
       {activeContent === 5 ? (
         // MistHaven Content
         <div className="relative z-10 h-full w-full overflow-y-auto">
-          <div 
-            className="absolute inset-0 bg-cover bg-center -z-10" 
-            style={{backgroundImage: "url('https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/91b76de7-6349-4826-be85-69a179ee18b6_3840w.jpg')"}}
-          />
-          
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:py-10 pt-20">
             <div className="bg-white/5 border border-white/15 rounded-3xl p-4 sm:p-6 lg:p-8 backdrop-blur-xl shadow-[0_10px_60px_-15px_rgba(0,0,0,0.6)]">
               
