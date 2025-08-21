@@ -79,15 +79,15 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
 }) => (
   <GlassEffect
     href={href}
-    className="rounded-3xl p-2.5 md:p-3 lg:p-3"
+    className="rounded-3xl p-3"
   >
-    <div className="flex items-center justify-center gap-1 md:gap-2 lg:gap-2 rounded-3xl p-2.5 py-0 px-0.5">
+    <div className="flex items-center justify-center gap-2 rounded-3xl p-2.5 py-0 px-0.5">
       {icons.map((icon, index) => (
         <div key={index} className="relative">
           <img
             src={icon.src}
             alt={icon.alt}
-            className={`w-12 h-12 md:w-16 md:h-16 lg:w-16 lg:h-16 aspect-square object-cover transition-all duration-700 cursor-pointer -translate-y-px ${
+            className={`w-16 h-16 aspect-square object-cover transition-all duration-700 cursor-pointer -translate-y-px ${
               activeIndex === index 
                 ? 'scale-110' 
                 : 'hover:scale-110'
@@ -99,7 +99,7 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
             onClick={icon.onClick}
           />
           {activeIndex === index && (
-            <div className="absolute bottom-[-6px] md:bottom-[-8px] lg:bottom-[-8px] left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 md:w-2 md:h-2 lg:w-2 lg:h-2 bg-black/60 rounded-full transition-all duration-300" />
+            <div className="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-2 h-2 bg-black/60 rounded-full transition-all duration-300" />
           )}
         </div>
       ))}
