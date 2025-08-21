@@ -52,8 +52,6 @@ const Index = () => {
   const navigate = useNavigate();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
-  // Remove authentication guard to allow public access to landing page
-
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
