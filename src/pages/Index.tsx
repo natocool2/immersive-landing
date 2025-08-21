@@ -383,7 +383,7 @@ const Index = () => {
         </div>
       ) : (
         // Original content for other icons
-        <div className="relative z-10 flex items-center justify-center h-full pt-2 sm:pt-8 md:pt-2 lg:pt-8 pb-13 sm:pb-20 md:pb-13 lg:pb-20">
+        <div className="relative z-10 flex items-center justify-center h-full pt-[70px] pb-[106px]">
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
