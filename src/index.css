@@ -123,6 +123,16 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Global spacing - 70px top, 103px bottom */
+  main, .main-content, [data-main-content] {
+    @apply pt-[70px] pb-[103px];
+  }
+
+  /* Override for specific layouts that need full viewport */
+  .full-viewport {
+    @apply pt-0 pb-0;
+  }
 }
 
 @layer utilities {
