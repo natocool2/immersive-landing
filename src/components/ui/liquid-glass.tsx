@@ -79,7 +79,7 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
 }) => (
   <GlassEffect
     href={href}
-    className="rounded-3xl p-2"
+    className="rounded-3xl p-2 md:p-3 lg:p-3"
   >
     <div className="flex items-center justify-center gap-1 md:gap-2 lg:gap-2 rounded-3xl p-2 py-0 px-0.5">
       {icons.map((icon, index) => (
