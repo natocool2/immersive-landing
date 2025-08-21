@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import { useFullscreen } from "@/hooks/useFullscreen";
 import { Maximize, Minimize } from "lucide-react";
+import MistHaven from "@/components/MistHaven";
 
 const contentData = [
   {
@@ -77,6 +78,114 @@ const Index = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // Show MistHaven content when Steam icon (index 5) is active
+  if (activeContent === 5) {
+    return (
+      <div className="flex h-screen w-screen">
+        {/* Left side - keeps original layout */}
+        <div className="flex-1 relative overflow-hidden">
+          {/* Header */}
+          <div className="absolute top-0 left-0 right-0 z-50">
+            <Header />
+          </div>
+
+          {/* Background layers */}
+          <div className="absolute inset-0 bg-gradient-animated animate-gradient" />
+          <div className="absolute inset-0 bg-black/20" />
+          
+          {/* Mouse parallax effect */}
+          <motion.div
+            className="absolute inset-0 opacity-30"
+            style={{
+              background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
+                hsla(var(--primary), 0.3) 0%, 
+                transparent 50%)`,
+            }}
+            transition={{ type: "spring", stiffness: 50, damping: 30 }}
+          />
+
+          {/* Floating particles */}
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 bg-white/10 rounded-full"
+              initial={{ 
+                x: Math.random() * window.innerWidth * 0.6,
+                y: Math.random() * window.innerHeight,
+              }}
+              animate={{ 
+                y: [0, -100, 0],
+                opacity: [0, 1, 0],
+                scale: [0.5, 1, 0.5],
+              }}
+              transition={{
+                duration: 8 + Math.random() * 4,
+                repeat: Infinity,
+                delay: Math.random() * 5,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+
+          {/* Decorative elements */}
+          <motion.div
+            className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-primary/20 to-accent/20 blur-3xl"
+            animate={{ 
+              scale: [1, 1.2, 1],
+              rotate: [0, 180, 360],
+            }}
+            transition={{ 
+              duration: 20, 
+              repeat: Infinity, 
+              ease: "linear" 
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 left-1/4 w-96 h-96 rounded-full bg-gradient-to-l from-accent/20 to-primary/20 blur-3xl"
+            animate={{ 
+              scale: [1.2, 1, 1.2],
+              rotate: [360, 180, 0],
+            }}
+            transition={{ 
+              duration: 25, 
+              repeat: Infinity, 
+              ease: "linear" 
+            }}
+          />
+
+          {/* Dock Footer */}
+          <LiquidGlassDock onIconClick={setActiveContent} activeIcon={activeContent} />
+          
+          {/* Fullscreen Button */}
+          <motion.button
+            onClick={toggleFullscreen}
+            className="absolute bottom-4 right-4 z-50 p-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-white/20 transition-all duration-300"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            title={isFullscreen ? "Sair do fullscreen" : "Entrar em fullscreen"}
+          >
+            {isFullscreen ? (
+              <Minimize className="w-5 h-5" />
+            ) : (
+              <Maximize className="w-5 h-5" />
+            )}
+          </motion.button>
+        </div>
+
+        {/* Right side - MistHaven content with scroll */}
+        <motion.div 
+          className="w-1/2 h-screen overflow-y-auto bg-slate-950"
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <MistHaven />
+        </motion.div>
       </div>
     );
   }
