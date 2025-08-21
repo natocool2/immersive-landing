@@ -81,7 +81,7 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
     href={href}
     className="rounded-3xl p-3"
   >
-    <div className="flex items-center justify-center gap-2 rounded-3xl p-2.5 py-0 px-0.5">
+    <div className="flex items-center justify-center gap-2 rounded-3xl p-2.5 py-0 px-0.5 overflow-x-auto scrollbar-hide">
       {icons.map((icon, index) => (
         <div key={index} className="relative">
           <img
