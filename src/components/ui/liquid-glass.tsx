@@ -79,15 +79,15 @@ const GlassDock: React.FC<{ icons: DockIcon[]; href?: string; activeIndex?: numb
 }) => (
   <GlassEffect
     href={href}
-    className="rounded-3xl p-3 w-fit"
+    className="rounded-3xl p-3 max-w-[calc(100vw-150px)]"
   >
-    <div className="flex items-center justify-center gap-2 rounded-3xl p-2.5 py-0 px-0.5">
+    <div className="flex items-center gap-2 rounded-3xl p-2.5 py-0 px-0.5 overflow-x-auto scrollbar-hide">
       {icons.map((icon, index) => (
-        <div key={index} className="relative">
+        <div key={index} className="relative flex-shrink-0">
           <img
             src={icon.src}
             alt={icon.alt}
-            className={`w-16 h-16 aspect-square object-cover transition-all duration-700 cursor-pointer -translate-y-px ${
+            className={`w-16 h-16 aspect-square object-contain transition-all duration-700 cursor-pointer -translate-y-px ${
               activeIndex === index 
                 ? 'scale-110' 
                 : 'hover:scale-110'
