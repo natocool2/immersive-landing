@@ -133,7 +133,7 @@ const Index = () => {
       ))}
 
       {/* Conteúdo principal */}
-      {activeContent === 5 ? (
+      {activeContent === 4 || activeContent === 5 ? (
         // MistHaven Content
         <div className="relative z-10 h-full w-full overflow-y-auto">
           <div className="max-w-7xl mx-auto pt-[72px] pb-[103px] px-[30px]">
