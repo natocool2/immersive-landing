@@ -79,8 +79,15 @@ serve(async (req) => {
     } else {
       // Create price on the fly for one-time payments
       if (!amount || amount <= 0) {
-        throw new Error("Amount is required and must be greater than 0");
+        throw new Error("Amount is required and must be greater than 0 for one-time payments");
       }
+      
+      // Ensure amount is a valid integer (in cents)
+      const unitAmount = Math.round(Number(amount));
+      if (isNaN(unitAmount) || unitAmount <= 0) {
+        throw new Error("Invalid amount provided");
+      }
+      
       sessionConfig.line_items = [
         {
           price_data: {
@@ -88,7 +95,7 @@ serve(async (req) => {
             product_data: { 
               name: productName || "Produto" 
             },
-            unit_amount: Math.round(amount), // Amount in cents, ensure it's an integer
+            unit_amount: unitAmount,
             ...(mode === "subscription" ? { recurring: { interval: "month" } } : {}),
           },
           quantity: 1,

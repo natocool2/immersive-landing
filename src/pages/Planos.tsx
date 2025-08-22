@@ -324,12 +324,23 @@ export default function Planos() {
       return;
     }
     
+    // Handle free plan - no payment needed
+    if (tier.price === 0 && tier.yearlyPrice === 0) {
+      toast.success("Plano Free ativado com sucesso!");
+      return;
+    }
+    
     setSelectedTier(tier.name);
     setIsCheckingOut(true);
     
     try {
       const price = isYearly ? tier.yearlyPrice : tier.price;
       const finalPrice = appliedCoupon ? price * (1 - appliedCoupon.discount_percent / 100) : price;
+      
+      // Ensure we have a valid amount
+      if (!finalPrice || finalPrice <= 0) {
+        throw new Error("Preço inválido para este plano");
+      }
       
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
