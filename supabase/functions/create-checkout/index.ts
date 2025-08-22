@@ -67,8 +67,35 @@ serve(async (req) => {
       cancel_url: `${req.headers.get("origin")}/payment-canceled`,
     };
 
-    // Configure line items based on mode
-    if (mode === "subscription" && priceId && priceId.startsWith('price_') && priceId !== 'price_free') {
+    // Configure line items based on mode and provided data
+    logStep("Configuring line items", { mode, priceId, amount });
+    
+    // For payment mode (one-time purchases), always create price_data dynamically
+    if (mode === "payment") {
+      if (!amount || amount <= 0) {
+        throw new Error("Amount is required and must be greater than 0 for payment mode");
+      }
+      
+      // Ensure amount is a valid integer (in cents)
+      const unitAmount = Math.round(Number(amount));
+      if (isNaN(unitAmount) || unitAmount <= 0) {
+        throw new Error("Invalid amount provided");
+      }
+      
+      sessionConfig.line_items = [
+        {
+          price_data: {
+            currency: currency,
+            product_data: { 
+              name: productName || "Produto" 
+            },
+            unit_amount: unitAmount,
+          },
+          quantity: 1,
+        },
+      ];
+      logStep("Created payment mode line items", { unitAmount, productName });
+    } else if (mode === "subscription" && priceId && priceId.startsWith('price_') && priceId !== 'price_free') {
       // Use existing Stripe price for subscription (only for valid Stripe price IDs)
       sessionConfig.line_items = [
         {
@@ -76,8 +103,9 @@ serve(async (req) => {
           quantity: 1,
         },
       ];
+      logStep("Using existing Stripe price for subscription", { priceId });
     } else {
-      // Create price on the fly for one-time payments or dynamic subscriptions
+      // Create price on the fly for dynamic subscriptions
       if (!amount || amount <= 0) {
         throw new Error("Amount is required and must be greater than 0");
       }
@@ -96,11 +124,12 @@ serve(async (req) => {
               name: productName || "Produto" 
             },
             unit_amount: unitAmount,
-            ...(mode === "subscription" ? { recurring: { interval: "month" } } : {}),
+            recurring: { interval: "month" },
           },
           quantity: 1,
         },
       ];
+      logStep("Created dynamic subscription line items", { unitAmount, productName });
     }
 
     logStep("Creating Stripe session", { sessionConfig });
