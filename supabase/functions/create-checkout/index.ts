@@ -26,7 +26,7 @@ serve(async (req) => {
 
     // Parse request body
     const { mode, priceId, amount, currency = "eur", productName } = await req.json();
-    logStep("Request parsed", { mode, priceId, amount, currency, productName });
+    logStep("Request parsed", { mode, priceId, amount, currency, productName, hasAmount: !!amount, amountType: typeof amount });
 
     // Create Supabase client
     const supabaseClient = createClient(

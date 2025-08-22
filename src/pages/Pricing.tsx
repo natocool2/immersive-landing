@@ -363,6 +363,14 @@ export default function Pricing() {
       const price = isYearly ? tier.yearlyPrice : tier.price;
       const finalPrice = appliedCoupon ? price * (1 - appliedCoupon.discount_percent / 100) : price;
       
+      console.log('Pricing debug:', { 
+        tierName: tier.name, 
+        isYearly, 
+        price, 
+        finalPrice, 
+        amount: Math.round(finalPrice * 100) 
+      });
+      
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
           mode: 'subscription',
