@@ -48,6 +48,14 @@ const Index = () => {
   const [activeContent, setActiveContent] = useState(0);
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+
+  const handleIconClick = (index: number) => {
+    if (index === 5) { // Steam icon (6th icon, index 5) - Navigate to pricing
+      navigate('/pricing');
+    } else {
+      setActiveContent(index);
+    }
+  };
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
   // Remove authentication guard to allow public access to landing page
@@ -487,7 +495,7 @@ const Index = () => {
       />
       
       {/* Liquid Glass Dock Footer */}
-      <LiquidGlassDock onIconClick={setActiveContent} activeIcon={activeContent} />
+      <LiquidGlassDock onIconClick={handleIconClick} activeIcon={activeContent} />
       
       {/* Botão Fullscreen */}
       <motion.button

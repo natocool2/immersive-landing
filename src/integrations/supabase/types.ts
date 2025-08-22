@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      coupon_codes: {
+        Row: {
+          active: boolean | null
+          code: string
+          created_at: string | null
+          description: string | null
+          discount_percent: number
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          code: string
+          created_at?: string | null
+          description?: string | null
+          discount_percent: number
+          id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          code?: string
+          created_at?: string | null
+          description?: string | null
+          discount_percent?: number
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -46,7 +76,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_consultation_price: {
+        Args: { hours: number }
+        Returns: number
+      }
+      calculate_development_price: {
+        Args: { hours: number }
+        Returns: number
+      }
+      calculate_tiered_token_price: {
+        Args: { token_amount: number }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
