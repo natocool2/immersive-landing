@@ -354,11 +354,21 @@ export default function Pricing() {
         return;
       }
       
+      // For subscription plans, we need to find the tier to get the price
+      const tier = pricingTiers.find(t => t.name.toLowerCase() === priceId.replace('price_', ''));
+      if (!tier) {
+        throw new Error("Invalid pricing tier");
+      }
+      
+      const price = isYearly ? tier.yearlyPrice : tier.price;
+      const finalPrice = appliedCoupon ? price * (1 - appliedCoupon.discount_percent / 100) : price;
+      
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
-          priceId,
           mode: 'subscription',
-          productName,
+          amount: Math.round(finalPrice * 100), // Convert to cents
+          currency: 'eur',
+          productName: `${productName} - ${isYearly ? 'Annual' : 'Monthly'}`,
           couponCode: appliedCoupon?.code
         }
       });
