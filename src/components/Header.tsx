@@ -27,6 +27,14 @@ const Header = () => {
           <Button variant="ghost" size="sm" className="text-white hover:text-white/80">
             Events
           </Button>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-white hover:text-white/80"
+            onClick={() => navigate('/planos')}
+          >
+            Planos
+          </Button>
           <Button variant="ghost" size="icon" className="text-white hover:text-white/80">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="5" cy="12" r="2" fill="currentColor"/>
@@ -101,6 +109,14 @@ const Header = () => {
             </Button>
             <Button variant="ghost" size="sm" className="text-white hover:text-white/80 justify-start">
               Events
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-white hover:text-white/80 justify-start"
+              onClick={() => navigate('/planos')}
+            >
+              Planos
             </Button>
           </div>
         </nav>

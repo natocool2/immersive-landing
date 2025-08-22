@@ -50,11 +50,7 @@ const Index = () => {
   const navigate = useNavigate();
 
   const handleIconClick = (index: number) => {
-    if (index === 5) { // Steam icon (6th icon, index 5) - Navigate to pricing
-      navigate('/pricing');
-    } else {
-      setActiveContent(index);
-    }
+    setActiveContent(index);
   };
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
