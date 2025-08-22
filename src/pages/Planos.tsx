@@ -393,7 +393,7 @@ export default function Planos() {
               onClick={() => setIsYearly(!isYearly)}
               className={`relative h-6 w-12 rounded-full p-0 ${isYearly ? 'bg-primary' : 'bg-gray-600'}`}
             >
-              <div className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${isYearly ? 'translate-x-6' : 'translate-x-0.5'}`} />
+              <div className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${isYearly ? 'translate-x-6.5' : 'translate-x-1'}`} />
             </Button>
             <span className={`text-sm ${isYearly ? 'text-white' : 'text-gray-400'}`}>
               Anual <Badge variant="secondary" className="ml-1">20% OFF</Badge>
