@@ -134,13 +134,8 @@ const developmentPacks = [
   { name: "Pack Enterprise", hours: 40, price: 2800 }
 ];
 
-const coupons = [
-  { code: "WELCOME10", discount: 10, description: "10% de desconto no primeiro mês" },
-  { code: "ANNUAL20", discount: 20, description: "20% de desconto em planos anuais" },
-  { code: "STARTUP50", discount: 50, description: "50% de desconto para startups" },
-  { code: "STUDENT30", discount: 30, description: "30% de desconto para estudantes" },
-  { code: "REFERRAL15", discount: 15, description: "15% de desconto por referência" }
-];
+// Remove the public display of coupon codes for security
+// Coupons are now validated server-side only when entered by users
 
 export default function Planos() {
   const [isYearly, setIsYearly] = useState(false);
@@ -292,21 +287,25 @@ export default function Planos() {
     
     setIsApplyingCoupon(true);
     try {
-      const { data, error } = await supabase
-        .from('coupon_codes')
-        .select('*')
-        .eq('code', couponCode.toUpperCase())
-        .eq('active', true)
-        .single();
+      // Use the secure validation function instead of direct table access
+      const { data, error } = await supabase.rpc('validate_coupon_code', {
+        coupon_code_input: couponCode.toUpperCase()
+      });
 
-      if (error || !data) {
-        toast.error("Código de cupão inválido");
+      if (error) {
+        console.error('Error validating coupon:', error);
+        toast.error("Erro ao validar cupão");
+        setAppliedCoupon(null);
+      } else if (!data || data.length === 0) {
+        toast.error("Código de cupão inválido ou expirado");
         setAppliedCoupon(null);
       } else {
-        setAppliedCoupon(data);
-        toast.success(`Cupão aplicado! ${data.discount_percent}% de desconto`);
+        const couponData = data[0];
+        setAppliedCoupon(couponData);
+        toast.success(`Cupão aplicado! ${couponData.discount_percent}% de desconto`);
       }
     } catch (error) {
+      console.error('Error validating coupon:', error);
       toast.error("Erro ao validar cupão");
       setAppliedCoupon(null);
     } finally {
@@ -708,13 +707,13 @@ export default function Planos() {
               </div>
             )}
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2">
-              {coupons.map((coupon) => (
-                <div key={coupon.code} className="p-2 bg-slate-700/50 rounded text-center">
-                  <code className="text-purple-400 font-mono text-sm">{coupon.code}</code>
-                  <p className="text-xs text-gray-400">{coupon.description}</p>
-                </div>
-              ))}
+            <div className="p-3 bg-gray-700/50 rounded-lg text-center">
+              <p className="text-sm text-gray-300 mb-2">
+                Insira um código promocional para obter desconto na sua compra
+              </p>
+              <p className="text-xs text-gray-400">
+                Códigos promocionais são fornecidos durante campanhas especiais e eventos
+              </p>
             </div>
           </CardContent>
         </Card>

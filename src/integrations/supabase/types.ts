@@ -88,6 +88,15 @@ export type Database = {
         Args: { token_amount: number }
         Returns: number
       }
+      validate_coupon_code: {
+        Args: { coupon_code_input: string }
+        Returns: {
+          active: boolean
+          code: string
+          description: string
+          discount_percent: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
