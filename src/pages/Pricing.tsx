@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from "sonner";
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import Header from "@/components/Header";
@@ -167,7 +167,7 @@ export default function Pricing() {
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const { toast } = useToast();
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
   const { user } = useAuth();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
@@ -309,56 +309,53 @@ export default function Pricing() {
   };
 
   const applyCoupon = async () => {
+    if (!couponCode.trim()) {
+      toast.error("Por favor, insira um código de cupão");
+      return;
+    }
+    
+    setIsApplyingCoupon(true);
     try {
-      setIsCheckingOut(true);
-      const { data, error } = await supabase
-        .from('coupon_codes')
-        .select('*')
-        .eq('code', couponCode.toUpperCase())
-        .eq('active', true)
-        .single();
+      // Use the secure validation function instead of direct table access
+      const { data, error } = await supabase.rpc('validate_coupon_secure', {
+        coupon_code_input: couponCode.toUpperCase()
+      });
 
-      if (error || !data) {
-        toast({
-          title: "Invalid Coupon",
-          description: "The coupon code you entered is not valid or has expired.",
-          variant: "destructive"
+      if (error) {
+        console.error('Error validating coupon:', error);
+        toast.error("Erro ao validar cupão");
+        setAppliedCoupon(null);
+      } else if (!data || data.length === 0 || !data[0].valid) {
+        toast.error("Código de cupão inválido ou expirado");
+        setAppliedCoupon(null);
+      } else {
+        const couponData = data[0];
+        setAppliedCoupon({
+          code: couponCode.toUpperCase(),
+          discount_percent: couponData.discount_percent,
+          description: couponData.description,
+          active: true
         });
-        return;
+        toast.success(`Cupão aplicado! ${couponData.discount_percent}% de desconto`);
       }
-
-      setAppliedCoupon(data);
-      toast({
-        title: "Coupon Applied!",
-        description: `${data.description} - ${data.discount_percent}% off applied!`,
-      });
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to apply coupon code.",
-        variant: "destructive"
-      });
+      console.error('Error validating coupon:', error);
+      toast.error("Erro ao validar cupão");
+      setAppliedCoupon(null);
     } finally {
-      setIsCheckingOut(false);
+      setIsApplyingCoupon(false);
     }
   };
 
   const handleCheckout = async (tier: PricingTier) => {
     if (!user) {
-      toast({
-        title: "Login Required",
-        description: "Please login to continue",
-        variant: "destructive"
-      });
+      toast.error("Por favor, faça login para continuar");
       return;
     }
     
     // Handle free plan - no payment needed
     if (tier.price === 0 && tier.yearlyPrice === 0) {
-      toast({
-        title: "Success!",
-        description: "Free plan activated successfully!",
-      });
+      toast.success("Plano Free ativado com sucesso!");
       return;
     }
     
@@ -371,7 +368,7 @@ export default function Pricing() {
       
       // Ensure we have a valid amount
       if (!finalPrice || finalPrice <= 0) {
-        throw new Error("Invalid price for this plan");
+        throw new Error("Preço inválido para este plano");
       }
       
       const { data, error } = await supabase.functions.invoke('create-checkout', {
@@ -379,7 +376,7 @@ export default function Pricing() {
           mode: 'payment',
           amount: Math.round(finalPrice * 100), // Convert to cents
           currency: 'eur',
-          productName: `${tier.name} - ${isYearly ? 'Annual' : 'Monthly'}`,
+          productName: `${tier.name} - ${isYearly ? 'Anual' : 'Mensal'}`,
           couponCode: appliedCoupon?.code
         }
       });
@@ -390,13 +387,8 @@ export default function Pricing() {
       if (data?.url) {
         window.open(data.url, '_blank');
       }
-      
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to create checkout session",
-        variant: "destructive"
-      });
+      toast.error(error.message || "Erro ao processar pagamento");
     } finally {
       setIsCheckingOut(false);
       setSelectedTier(null);
@@ -423,11 +415,7 @@ export default function Pricing() {
       window.open(data.url, '_blank');
       
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to create checkout session",
-        variant: "destructive"
-      });
+      toast.error(error.message || "Erro ao processar compra");
     } finally {
       setIsCheckingOut(false);
     }
@@ -889,7 +877,7 @@ export default function Pricing() {
                   />
                   <Button 
                     onClick={applyCoupon}
-                    disabled={isCheckingOut || !couponCode}
+                    disabled={isApplyingCoupon || !couponCode}
                     variant="outline"
                   >
                     Apply
