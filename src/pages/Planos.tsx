@@ -323,10 +323,15 @@ export default function Planos() {
     setIsCheckingOut(true);
     
     try {
+      const price = isYearly ? tier.yearlyPrice : tier.price;
+      const finalPrice = appliedCoupon ? price * (1 - appliedCoupon.discount_percent / 100) : price;
+      
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
-          tier: tier.name,
-          isYearly,
+          mode: 'payment',
+          amount: Math.round(finalPrice * 100), // Convert to cents
+          currency: 'eur',
+          productName: `${tier.name} - ${isYearly ? 'Anual' : 'Mensal'}`,
           couponCode: appliedCoupon?.code
         }
       });
@@ -351,11 +356,14 @@ export default function Planos() {
     }
     
     try {
+      const finalPrice = appliedCoupon ? price * (1 - appliedCoupon.discount_percent / 100) : price;
+      
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
-          addonType: type,
-          addonAmount: amount,
-          addonPrice: price,
+          mode: 'payment',
+          amount: Math.round(finalPrice * 100), // Convert to cents
+          currency: 'eur',
+          productName: `${amount} ${type === 'tokens' ? 'Milhões de tokens' : type === 'consultation' ? 'Horas de consultoria' : 'Horas de desenvolvimento'}`,
           couponCode: appliedCoupon?.code
         }
       });

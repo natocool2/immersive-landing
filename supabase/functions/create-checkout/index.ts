@@ -78,6 +78,9 @@ serve(async (req) => {
       ];
     } else {
       // Create price on the fly for one-time payments
+      if (!amount || amount <= 0) {
+        throw new Error("Amount is required and must be greater than 0");
+      }
       sessionConfig.line_items = [
         {
           price_data: {
@@ -85,7 +88,7 @@ serve(async (req) => {
             product_data: { 
               name: productName || "Produto" 
             },
-            unit_amount: amount, // Amount in cents
+            unit_amount: Math.round(amount), // Amount in cents, ensure it's an integer
             ...(mode === "subscription" ? { recurring: { interval: "month" } } : {}),
           },
           quantity: 1,
