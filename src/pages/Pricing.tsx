@@ -165,7 +165,7 @@ export default function Pricing() {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
@@ -309,7 +309,7 @@ export default function Pricing() {
 
   const applyCoupon = async () => {
     try {
-      setLoading(true);
+      setIsCheckingOut(true);
       const { data, error } = await supabase
         .from('coupon_codes')
         .select('*')
@@ -338,7 +338,7 @@ export default function Pricing() {
         variant: "destructive"
       });
     } finally {
-      setLoading(false);
+      setIsCheckingOut(false);
     }
   };
 
@@ -361,7 +361,8 @@ export default function Pricing() {
       return;
     }
     
-    setLoading(true);
+    setSelectedTier(tier.name);
+    setIsCheckingOut(true);
     
     try {
       const price = isYearly ? tier.yearlyPrice : tier.price;
@@ -396,13 +397,14 @@ export default function Pricing() {
         variant: "destructive"
       });
     } finally {
-      setLoading(false);
+      setIsCheckingOut(false);
+      setSelectedTier(null);
     }
   };
 
   const handleAddonPurchase = async (productName: string, price: number) => {
     try {
-      setLoading(true);
+      setIsCheckingOut(true);
       
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
@@ -426,7 +428,7 @@ export default function Pricing() {
         variant: "destructive"
       });
     } finally {
-      setLoading(false);
+      setIsCheckingOut(false);
     }
   };
 
@@ -586,7 +588,7 @@ export default function Pricing() {
                         className="w-full mb-6"
                         variant={tier.popular ? "default" : "outline"}
                         onClick={() => handleCheckout(tier)}
-                        disabled={loading}
+                        disabled={isCheckingOut && selectedTier === tier.name}
                       >
                         {tier.price === 0 ? 'Get Started Free' : 'Start Subscription'}
                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -639,7 +641,7 @@ export default function Pricing() {
                                 className="w-full" 
                                 variant="outline"
                                 onClick={() => handleAddonPurchase(`${pack.name} - ${pack.tokens} tokens`, pack.price)}
-                                disabled={loading}
+                                disabled={isCheckingOut}
                               >
                                 Purchase
                               </Button>
@@ -669,7 +671,7 @@ export default function Pricing() {
                                 className="w-full" 
                                 variant="outline"
                                 onClick={() => handleAddonPurchase(`${pack.name} - ${pack.hours} hours consultation`, pack.price)}
-                                disabled={loading}
+                                disabled={isCheckingOut}
                               >
                                 Purchase
                               </Button>
@@ -699,7 +701,7 @@ export default function Pricing() {
                                 className="w-full" 
                                 variant="outline"
                                 onClick={() => handleAddonPurchase(`${pack.name} - ${pack.hours} hours development`, pack.price)}
-                                disabled={loading}
+                                disabled={isCheckingOut}
                               >
                                 Purchase
                               </Button>
@@ -755,7 +757,7 @@ export default function Pricing() {
                           `Custom ${customTokens[0]}M tokens`, 
                           calculateTieredTokenPrice(customTokens[0])
                         )}
-                        disabled={loading}
+                        disabled={isCheckingOut}
                       >
                         Purchase {customTokens[0]}M Tokens - ${calculateTieredTokenPrice(customTokens[0]).toFixed(2)}
                       </Button>
@@ -805,7 +807,7 @@ export default function Pricing() {
                           `Custom ${customConsultation[0]} hours consultation`, 
                           calculateConsultationPrice(customConsultation[0])
                         )}
-                        disabled={loading}
+                        disabled={isCheckingOut}
                       >
                         Purchase {customConsultation[0]} Hours - ${calculateConsultationPrice(customConsultation[0]).toFixed(2)}
                       </Button>
@@ -855,7 +857,7 @@ export default function Pricing() {
                           `Custom ${customDevelopment[0]} hours development`, 
                           calculateDevelopmentPrice(customDevelopment[0])
                         )}
-                        disabled={loading}
+                        disabled={isCheckingOut}
                       >
                         Purchase {customDevelopment[0]} Hours - ${calculateDevelopmentPrice(customDevelopment[0]).toFixed(2)}
                       </Button>
@@ -886,7 +888,7 @@ export default function Pricing() {
                   />
                   <Button 
                     onClick={applyCoupon}
-                    disabled={loading || !couponCode}
+                    disabled={isCheckingOut || !couponCode}
                     variant="outline"
                   >
                     Apply
