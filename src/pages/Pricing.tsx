@@ -373,7 +373,7 @@ export default function Pricing() {
       
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
-          mode: 'subscription',
+          mode: 'payment', // Changed from 'subscription' to 'payment' for one-time purchases
           amount: Math.round(finalPrice * 100), // Convert to cents
           currency: 'eur',
           productName: `${productName} - ${isYearly ? 'Annual' : 'Monthly'}`,
