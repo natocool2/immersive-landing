@@ -288,7 +288,7 @@ export default function Planos() {
     setIsApplyingCoupon(true);
     try {
       // Use the secure validation function instead of direct table access
-      const { data, error } = await supabase.rpc('validate_coupon_code', {
+      const { data, error } = await supabase.rpc('validate_coupon_secure', {
         coupon_code_input: couponCode.toUpperCase()
       });
 
@@ -296,12 +296,17 @@ export default function Planos() {
         console.error('Error validating coupon:', error);
         toast.error("Erro ao validar cupão");
         setAppliedCoupon(null);
-      } else if (!data || data.length === 0) {
+      } else if (!data || data.length === 0 || !data[0].valid) {
         toast.error("Código de cupão inválido ou expirado");
         setAppliedCoupon(null);
       } else {
         const couponData = data[0];
-        setAppliedCoupon(couponData);
+        setAppliedCoupon({
+          code: couponCode.toUpperCase(),
+          discount_percent: couponData.discount_percent,
+          description: couponData.description,
+          active: true
+        });
         toast.success(`Cupão aplicado! ${couponData.discount_percent}% de desconto`);
       }
     } catch (error) {

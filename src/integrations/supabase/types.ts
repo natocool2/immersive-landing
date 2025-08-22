@@ -97,6 +97,14 @@ export type Database = {
           discount_percent: number
         }[]
       }
+      validate_coupon_secure: {
+        Args: { coupon_code_input: string }
+        Returns: {
+          description: string
+          discount_percent: number
+          valid: boolean
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
