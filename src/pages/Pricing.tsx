@@ -34,12 +34,13 @@ interface PricingTier {
   name: string;
   price: number;
   yearlyPrice: number;
-  tokens: string;
   description: string;
   features: string[];
-  popular?: boolean;
   icon: any;
-  gradient: string;
+  popular?: boolean;
+  tokenIncluded: number;
+  consultationIncluded?: number;
+  extraTokenPrice?: number;
 }
 
 const pricingTiers: PricingTier[] = [
@@ -47,88 +48,88 @@ const pricingTiers: PricingTier[] = [
     name: "Free",
     price: 0,
     yearlyPrice: 0,
-    tokens: "2M",
-    description: "Perfect for getting started",
+    description: "Perfeito para começar",
+    icon: Zap,
+    tokenIncluded: 2,
     features: [
-      "2M tokens/month included",
-      "Basic profile creation",
-      "Community content access",
-      "Public events participation",
-      "Limited uploads (3 projects)",
-      "Basic social network access",
-      "Community support"
-    ],
-    icon: Star,
-    gradient: "from-slate-400 to-slate-600"
+      "2M tokens/mês incluídos",
+      "Criação básica de perfil",
+      "Acesso ao conteúdo da comunidade",
+      "Participação em eventos públicos",
+      "Uploads limitados (3 projetos)",
+      "Acesso básico à rede social",
+      "Suporte da comunidade"
+    ]
   },
   {
     name: "Starter",
     price: 29,
     yearlyPrice: 290,
-    tokens: "10M",
-    description: "Great for individuals and small teams",
+    description: "Ideal para iniciantes",
+    icon: Star,
+    tokenIncluded: 10,
     features: [
-      "10M tokens/month included",
-      "AI business plan creation",
-      "Basic task automation",
-      "5GB storage",
-      "Competition participation",
-      "Basic digital certificates",
-      "Unlimited personal project uploads",
-      "Introductory bootcamp access",
-      "Email support"
-    ],
-    icon: Zap,
-    gradient: "from-blue-400 to-blue-600"
+      "10M tokens/mês incluídos",
+      "Criação de plano de negócios IA",
+      "Automação básica de tarefas",
+      "5GB de armazenamento",
+      "Participação em competições",
+      "Certificados digitais básicos",
+      "Uploads de projetos pessoais ilimitados",
+      "Acesso a bootcamp introdutório",
+      "Suporte por email"
+    ]
   },
   {
     name: "Pro",
     price: 99,
     yearlyPrice: 990,
-    tokens: "30M",
-    description: "Advanced features for professionals",
-    features: [
-      "30M tokens/month included",
-      "Full Enengin access",
-      "Advanced development resources",
-      "Complete APIs and integrations",
-      "50GB storage",
-      "Advanced technical training",
-      "Specialized technical bootcamps",
-      "Advanced AI analysis",
-      "1h monthly consultation included",
-      "Priority support",
-      "Extra tokens: $0.04 per 1000 tokens"
-    ],
+    description: "Para profissionais avançados",
+    icon: Code,
     popular: true,
-    icon: Sparkles,
-    gradient: "from-purple-400 to-purple-600"
+    tokenIncluded: 30,
+    consultationIncluded: 1,
+    extraTokenPrice: 0.04,
+    features: [
+      "30M tokens/mês incluídos",
+      "Acesso completo ao Enengin",
+      "Recursos de desenvolvimento avançados",
+      "APIs e integrações completas",
+      "50GB de armazenamento",
+      "Treinamento técnico avançado",
+      "Bootcamps técnicos especializados",
+      "Análise IA avançada",
+      "1h de consultoria mensal incluída",
+      "Suporte prioritário",
+      "Tokens extras: $0,04 por 1000 tokens"
+    ]
   },
   {
     name: "Enterprise",
     price: 199,
     yearlyPrice: 1990,
-    tokens: "100M",
-    description: "Complete solution for large organizations",
+    description: "Para equipas e empresas",
+    icon: Users,
+    tokenIncluded: 100,
+    consultationIncluded: 3,
+    extraTokenPrice: 0.03,
     features: [
-      "100M tokens/month included",
-      "Multi-user access (up to 25 users)",
-      "Advanced enterprise automation",
-      "Unlimited storage",
-      "Team management dashboard",
-      "Complete collaborative tools",
-      "Project management (Kanban, tasks)",
-      "Student/intern tracking",
-      "CRM/ERP integrations",
-      "Talent matchmaking",
-      "3h monthly consultation included",
-      "24/7 dedicated support",
-      "Extra tokens: $0.03 per 1000 tokens (25% discount)",
-      "SLA guarantee",
-      "Personalized onboarding"
-    ],
-    icon: Crown,
-    gradient: "from-amber-400 to-amber-600"
+      "100M tokens/mês incluídos",
+      "Acesso multi-utilizador (até 25 utilizadores)",
+      "Automação empresarial avançada",
+      "Armazenamento ilimitado",
+      "Dashboard de gestão de equipa",
+      "Ferramentas colaborativas completas",
+      "Gestão de projetos (Kanban, tarefas)",
+      "Rastreamento de estudantes/estagiários",
+      "Integrações CRM/ERP",
+      "Matchmaking de talentos",
+      "3h de consultoria mensal incluída",
+      "Suporte dedicado 24/7",
+      "Tokens extras: $0,03 por 1000 tokens (25% desconto)",
+      "Garantia SLA",
+      "Onboarding personalizado"
+    ]
   }
 ];
 
@@ -551,7 +552,7 @@ export default function Pricing() {
                     )}
 
                     <CardHeader className="pb-4">
-                      <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-r ${tier.gradient} mb-4`}>
+                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-r from-primary to-primary/70 mb-4">
                         <Icon className="h-6 w-6 text-white" />
                       </div>
                       
@@ -578,7 +579,7 @@ export default function Pricing() {
                         )}
                         
                         <div className="text-sm text-primary font-medium">
-                          {tier.tokens} tokens included
+                          {tier.tokenIncluded}M tokens included
                         </div>
                       </div>
                     </CardHeader>
