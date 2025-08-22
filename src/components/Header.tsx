@@ -16,7 +16,8 @@ const Header = () => {
         <img 
           src="/lovable-uploads/08de0c6d-a943-40ea-953a-e040d185cb65.png" 
           alt="Logo" 
-          className="h-8 md:h-10 w-auto"
+          className="h-8 md:h-10 w-auto cursor-pointer"
+          onClick={() => navigate('/')}
         />
         
         {/* Desktop Navigation */}
@@ -31,9 +32,9 @@ const Header = () => {
             variant="ghost" 
             size="sm" 
             className="text-white hover:text-white/80"
-            onClick={() => navigate('/planos')}
+            onClick={() => window.location.href = 'https://easynetpro.com/pricing'}
           >
-            Planos
+            Pricing
           </Button>
           <Button variant="ghost" size="icon" className="text-white hover:text-white/80">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -114,9 +115,9 @@ const Header = () => {
               variant="ghost" 
               size="sm" 
               className="text-white hover:text-white/80 justify-start"
-              onClick={() => navigate('/planos')}
+              onClick={() => window.location.href = 'https://easynetpro.com/pricing'}
             >
-              Planos
+              Pricing
             </Button>
           </div>
         </nav>
