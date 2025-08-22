@@ -68,8 +68,8 @@ serve(async (req) => {
     };
 
     // Configure line items based on mode
-    if (mode === "subscription" && priceId) {
-      // Use existing Stripe price for subscription
+    if (mode === "subscription" && priceId && priceId.startsWith('price_') && priceId !== 'price_free') {
+      // Use existing Stripe price for subscription (only for valid Stripe price IDs)
       sessionConfig.line_items = [
         {
           price: priceId,
@@ -77,9 +77,9 @@ serve(async (req) => {
         },
       ];
     } else {
-      // Create price on the fly for one-time payments
+      // Create price on the fly for one-time payments or dynamic subscriptions
       if (!amount || amount <= 0) {
-        throw new Error("Amount is required and must be greater than 0 for one-time payments");
+        throw new Error("Amount is required and must be greater than 0");
       }
       
       // Ensure amount is a valid integer (in cents)
