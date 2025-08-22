@@ -345,7 +345,7 @@ export default function Pricing() {
       setLoading(true);
       
       // Handle free plan - no payment needed
-      if (priceId === 'price_free') {
+      if (productName.toLowerCase() === 'free') {
         toast({
           title: "Success!",
           description: "Free plan activated successfully!",
@@ -355,7 +355,7 @@ export default function Pricing() {
       }
       
       // For subscription plans, we need to find the tier to get the price
-      const tier = pricingTiers.find(t => t.name.toLowerCase() === priceId.replace('price_', ''));
+      const tier = pricingTiers.find(t => t.name.toLowerCase() === productName.toLowerCase());
       if (!tier) {
         throw new Error("Invalid pricing tier");
       }
@@ -582,7 +582,7 @@ export default function Pricing() {
                       <Button 
                         className="w-full mb-6"
                         variant={tier.popular ? "default" : "outline"}
-                        onClick={() => handleCheckout(`price_${tier.name.toLowerCase()}`, tier.name)}
+                        onClick={() => handleCheckout('', tier.name)} // Remove priceId, just pass tier name
                         disabled={loading}
                       >
                         {tier.price === 0 ? 'Get Started Free' : 'Start Subscription'}
