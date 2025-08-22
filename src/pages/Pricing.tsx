@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import Header from "@/components/Header";
 import { LiquidGlassDock } from "@/components/LiquidGlassDock";
@@ -166,6 +167,7 @@ export default function Pricing() {
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
   // Dynamic add-on states
@@ -340,43 +342,42 @@ export default function Pricing() {
     }
   };
 
-  const handleCheckout = async (priceId: string, productName: string) => {
+  const handleCheckout = async (tier: PricingTier) => {
+    if (!user) {
+      toast({
+        title: "Login Required",
+        description: "Please login to continue",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Handle free plan - no payment needed
+    if (tier.price === 0 && tier.yearlyPrice === 0) {
+      toast({
+        title: "Success!",
+        description: "Free plan activated successfully!",
+      });
+      return;
+    }
+    
+    setLoading(true);
+    
     try {
-      setLoading(true);
-      
-      // Handle free plan - no payment needed
-      if (productName.toLowerCase() === 'free') {
-        toast({
-          title: "Success!",
-          description: "Free plan activated successfully!",
-        });
-        setLoading(false);
-        return;
-      }
-      
-      // For subscription plans, we need to find the tier to get the price
-      const tier = pricingTiers.find(t => t.name.toLowerCase() === productName.toLowerCase());
-      if (!tier) {
-        throw new Error("Invalid pricing tier");
-      }
-      
       const price = isYearly ? tier.yearlyPrice : tier.price;
       const finalPrice = appliedCoupon ? price * (1 - appliedCoupon.discount_percent / 100) : price;
       
-      console.log('Pricing debug:', { 
-        tierName: tier.name, 
-        isYearly, 
-        price, 
-        finalPrice, 
-        amount: Math.round(finalPrice * 100) 
-      });
+      // Ensure we have a valid amount
+      if (!finalPrice || finalPrice <= 0) {
+        throw new Error("Invalid price for this plan");
+      }
       
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
-          mode: 'payment', // Changed from 'subscription' to 'payment' for one-time purchases
+          mode: 'payment',
           amount: Math.round(finalPrice * 100), // Convert to cents
           currency: 'eur',
-          productName: `${productName} - ${isYearly ? 'Annual' : 'Monthly'}`,
+          productName: `${tier.name} - ${isYearly ? 'Annual' : 'Monthly'}`,
           couponCode: appliedCoupon?.code
         }
       });
@@ -384,7 +385,9 @@ export default function Pricing() {
       if (error) throw error;
 
       // Open Stripe checkout in a new tab
-      window.open(data.url, '_blank');
+      if (data?.url) {
+        window.open(data.url, '_blank');
+      }
       
     } catch (error: any) {
       toast({
@@ -582,7 +585,7 @@ export default function Pricing() {
                       <Button 
                         className="w-full mb-6"
                         variant={tier.popular ? "default" : "outline"}
-                        onClick={() => handleCheckout('', tier.name)} // Remove priceId, just pass tier name
+                        onClick={() => handleCheckout(tier)}
                         disabled={loading}
                       >
                         {tier.price === 0 ? 'Get Started Free' : 'Start Subscription'}
