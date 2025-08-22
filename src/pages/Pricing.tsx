@@ -134,10 +134,10 @@ const pricingTiers: PricingTier[] = [
 ];
 
 const tokenPacks = [
-  { name: "Pack Small", tokens: "5M", price: 15 },
-  { name: "Pack Medium", tokens: "20M", price: 50 },
-  { name: "Pack Large", tokens: "50M", price: 120 },
-  { name: "Pack XL", tokens: "100M", price: 220 }
+  { name: "Pack Small", tokens: 5, price: 15 },
+  { name: "Pack Medium", tokens: 20, price: 50 },
+  { name: "Pack Large", tokens: 50, price: 120 },
+  { name: "Pack XL", tokens: 100, price: 220 }
 ];
 
 const consultationPacks = [
