@@ -344,6 +344,16 @@ export default function Pricing() {
     try {
       setLoading(true);
       
+      // Handle free plan - no payment needed
+      if (priceId === 'price_free') {
+        toast({
+          title: "Success!",
+          description: "Free plan activated successfully!",
+        });
+        setLoading(false);
+        return;
+      }
+      
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
           priceId,
