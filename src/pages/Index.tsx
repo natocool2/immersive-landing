@@ -133,59 +133,7 @@ const Index = () => {
       ))}
 
       {/* Conteúdo principal */}
-      {activeContent === 4 ? (
-        // Safari Content - Full Width
-        <div className="relative z-10 h-full w-full overflow-y-auto">
-          <div className="w-full pt-[72px] pb-[103px] px-0">
-            <div className="bg-white/5 border border-white/15 rounded-3xl p-4 sm:p-6 lg:p-8 backdrop-blur-xl shadow-[0_10px_60px_-15px_rgba(0,0,0,0.6)] mx-4 sm:mx-6 lg:mx-8">
-              
-              {/* Header */}
-              <header className="flex items-center justify-between mb-10">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-400/10 ring-1 ring-emerald-300/30">
-                    <Trees className="h-5 w-5 text-emerald-300" />
-                  </span>
-                  <span className="text-xl md:text-2xl text-white font-medium tracking-tighter">Safari Browser</span>
-                </div>
-
-                <nav className="hidden md:flex items-center gap-8 text-sm text-slate-200/90">
-                  <a href="#" className="hover:text-white transition">New Tab</a>
-                  <a href="#" className="hover:text-white transition">Bookmarks</a>
-                  <a href="#" className="hover:text-white transition">History</a>
-                  <a href="#" className="hover:text-white transition">Settings</a>
-                </nav>
-
-                <div className="flex items-center gap-2">
-                  <button className="hidden sm:inline-flex gap-2 hover:bg-white transition font-medium text-slate-900 bg-white/90 rounded-full px-4 py-2 shadow-lg items-center">
-                    <Calendar className="h-4 w-4" />
-                    Browse
-                  </button>
-                </div>
-              </header>
-
-              {/* Hero */}
-              <section className="w-full">
-                <div className="w-full">
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold tracking-tight leading-[0.95] text-center">
-                    <span className="block text-white font-medium tracking-tighter">Browse the</span>
-                    <span className="block bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70 font-medium tracking-tighter">Infinite Web</span>
-                  </h1>
-
-                  <p className="mt-6 text-base sm:text-lg text-slate-200/90 text-center max-w-3xl mx-auto">
-                    Experience the web like never before with Safari's advanced browsing capabilities, privacy features, and seamless integration.
-                  </p>
-
-                  <div className="mt-8 flex justify-center">
-                    <div className="w-full max-w-2xl">
-                      <GlassInput placeholder="Search or enter website URL..." />
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </div>
-        </div>
-      ) : activeContent === 5 ? (
+      {activeContent === 4 || activeContent === 5 ? (
         // MistHaven Content
         <div className="relative z-10 h-full w-full overflow-y-auto">
           <div className="max-w-7xl mx-auto pt-[72px] pb-[103px] px-[30px]">
