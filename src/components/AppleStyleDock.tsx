@@ -1,62 +1,62 @@
 import {
-  Palette,
-  Sparkles,
-  Home,
+  Activity,
+  Component,
+  HomeIcon,
   Mail,
-  User,
-  Camera,
-  Heart,
+  Package,
+  ScrollText,
+  SunMoon,
 } from 'lucide-react';
 
 import { Dock, DockIcon, DockItem, DockLabel } from '@/components/ui/dock';
 
 const data = [
   {
-    title: 'Início',
+    title: 'Home',
     icon: (
-      <Home className='h-full w-full text-white/80 hover:text-white transition-colors' />
+      <HomeIcon className='h-full w-full text-neutral-600 dark:text-neutral-300' />
     ),
     href: '#',
   },
   {
-    title: 'Galeria',
+    title: 'Products',
     icon: (
-      <Camera className='h-full w-full text-white/80 hover:text-white transition-colors' />
+      <Package className='h-full w-full text-neutral-600 dark:text-neutral-300' />
     ),
     href: '#',
   },
   {
-    title: 'Arte',
+    title: 'Components',
     icon: (
-      <Palette className='h-full w-full text-white/80 hover:text-white transition-colors' />
+      <Component className='h-full w-full text-neutral-600 dark:text-neutral-300' />
     ),
     href: '#',
   },
   {
-    title: 'Efeitos',
+    title: 'Activity',
     icon: (
-      <Sparkles className='h-full w-full text-white/80 hover:text-white transition-colors' />
+      <Activity className='h-full w-full text-neutral-600 dark:text-neutral-300' />
     ),
     href: '#',
   },
   {
-    title: 'Perfil',
+    title: 'Change Log',
     icon: (
-      <User className='h-full w-full text-white/80 hover:text-white transition-colors' />
+      <ScrollText className='h-full w-full text-neutral-600 dark:text-neutral-300' />
     ),
     href: '#',
   },
   {
-    title: 'Favoritos',
+    title: 'Email',
     icon: (
-      <Heart className='h-full w-full text-white/80 hover:text-white transition-colors' />
+      <Mail className='h-full w-full text-neutral-600 dark:text-neutral-300' />
     ),
     href: '#',
   },
   {
-    title: 'Contato',
+    title: 'Theme',
     icon: (
-      <Mail className='h-full w-full text-white/80 hover:text-white transition-colors' />
+      <SunMoon className='h-full w-full text-neutral-600 dark:text-neutral-300' />
     ),
     href: '#',
   },
@@ -64,14 +64,14 @@ const data = [
 
 export function AppleStyleDock() {
   return (
-    <div className='absolute bottom-6 left-1/2 max-w-full -translate-x-1/2 z-50'>
-      <Dock className='items-end pb-3 backdrop-blur-md bg-white/10 border border-white/20'>
+    <div className='absolute bottom-2 left-1/2 max-w-full -translate-x-1/2'>
+      <Dock className='items-end pb-3'>
         {data.map((item, idx) => (
           <DockItem
             key={idx}
-            className='aspect-square rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300'
+            className='aspect-square rounded-full bg-gray-200 dark:bg-neutral-800'
           >
-            <DockLabel className='bg-black/80 text-white border-white/20'>{item.title}</DockLabel>
+            <DockLabel>{item.title}</DockLabel>
             <DockIcon>{item.icon}</DockIcon>
           </DockItem>
         ))}
