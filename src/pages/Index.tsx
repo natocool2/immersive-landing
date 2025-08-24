@@ -133,8 +133,21 @@ const Index = () => {
       ))}
 
       {/* Conteúdo principal */}
-      {activeContent === 4 || activeContent === 5 ? (
-        // MistHaven Content
+      {activeContent === 4 ? (
+        // Safari Content
+        <div className="relative z-10 h-full w-full overflow-y-auto">
+          <div className="max-w-7xl mx-auto pt-[72px] pb-[103px]">
+            <div className="rounded-3xl p-4 sm:p-6 lg:p-8">
+              {/* Safari content goes here */}
+              <div className="text-center text-white">
+                <h1 className="text-4xl font-bold mb-4">Safari Browser</h1>
+                <p className="text-xl text-white/70">Browse the web with style</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : activeContent === 5 ? (
+        // MistHaven Content (Steam is now index 5)
         <div className="relative z-10 h-full w-full overflow-y-auto">
           <div className="max-w-7xl mx-auto pt-[72px] pb-[103px] px-[30px]">
             <div className="bg-white/5 border border-white/15 rounded-3xl p-4 sm:p-6 lg:p-8 backdrop-blur-xl shadow-[0_10px_60px_-15px_rgba(0,0,0,0.6)]">
