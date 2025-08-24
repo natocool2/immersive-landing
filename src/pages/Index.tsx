@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AppleStyleDock } from "@/components/AppleStyleDock";
+import { LiquidGlassDock } from "@/components/LiquidGlassDock";
 import { GlassInput } from "@/components/ui/liquid-glass";
 import { useAuth } from "@/contexts/AuthContext";
 import UserMenu from "@/components/UserMenu";
@@ -491,7 +491,7 @@ const Index = () => {
       />
       
       {/* Liquid Glass Dock Footer */}
-      <AppleStyleDock />
+      <LiquidGlassDock onIconClick={handleIconClick} activeIcon={activeContent} />
       
       {/* Botão Fullscreen */}
       <motion.button
