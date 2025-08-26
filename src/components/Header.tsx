@@ -53,7 +53,7 @@ const Header = () => {
             <UserMenu />
           ) : (
             <Button 
-              onClick={() => navigate('/auth')} 
+              onClick={() => window.location.href = 'https://auth.easynetpro.com/api/auth/google?redirect_uri=' + encodeURIComponent(window.location.href)} 
               variant="outline" 
               size="sm" 
               className="rounded-full text-xs md:text-sm"
