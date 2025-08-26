@@ -8,6 +8,7 @@ import UserMenu from "@/components/UserMenu";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import { useFullscreen } from "@/hooks/useFullscreen";
+import { DeveloperDashboard } from "@/components/DeveloperDashboard";
 import { Maximize, Minimize, Trees, Calendar, CalendarClock, Users, Dog, Check, Star, MapPin, ShieldCheck, Leaf, Flame, Moon, WifiOff, Book, Coffee, ArrowRight, Pencil, ChevronDown } from "lucide-react";
 
 const contentData = [
