@@ -134,7 +134,14 @@ const Index = () => {
       ))}
 
       {/* Conteúdo principal */}
-      {activeContent === 4 || activeContent === 5 ? (
+      {activeContent === 5 ? (
+        // Developer Dashboard for Steam icon
+        <div className="relative z-10 h-full w-full overflow-y-auto">
+          <div className="w-full pt-[72px] pb-[106px] px-[16px]">
+            <DeveloperDashboard />
+          </div>
+        </div>
+      ) : activeContent === 4 ? (
         // MistHaven Content
         <div className="relative z-10 h-full w-full overflow-y-auto">
           <div className="w-full pt-[72px] pb-[106px] px-[16px]">
