@@ -7,7 +7,7 @@ import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/EnproAuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle, Star, Users, Zap, Clock, Code } from "lucide-react";
 import Header from "@/components/Header";

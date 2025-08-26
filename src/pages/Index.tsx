@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LiquidGlassDock } from "@/components/LiquidGlassDock";
 import { GlassInput } from "@/components/ui/liquid-glass";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/EnproAuthContext";
 import UserMenu from "@/components/UserMenu";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
