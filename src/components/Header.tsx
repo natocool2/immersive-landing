@@ -53,7 +53,7 @@ const Header = () => {
             <UserMenu />
           ) : (
             <Button 
-              onClick={() => window.location.href = 'https://auth.easynetpro.com/api/auth/google?redirect_uri=' + encodeURIComponent(window.location.href)} 
+              onClick={() => window.location.href = 'https://auth.easynetpro.com'} 
               variant="outline" 
               size="sm" 
               className="rounded-full text-xs md:text-sm"
@@ -82,7 +82,7 @@ const Header = () => {
             <UserMenu />
           ) : (
             <Button 
-              onClick={() => window.location.href = 'https://auth.easynetpro.com/api/auth/google?redirect_uri=' + encodeURIComponent(window.location.href)} 
+              onClick={() => window.location.href = 'https://auth.easynetpro.com'} 
               variant="outline" 
               size="sm" 
               className="rounded-full text-xs"
