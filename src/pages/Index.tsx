@@ -137,7 +137,7 @@ const Index = () => {
         // MistHaven Content
         <div className="relative z-10 h-full w-full overflow-y-auto">
           <div className="max-w-7xl mx-auto pt-[72px] pb-[103px] px-[30px]">
-            <div className="bg-white/5 border border-white/15 rounded-3xl p-4 sm:p-6 lg:p-8 backdrop-blur-xl shadow-[0_10px_60px_-15px_rgba(0,0,0,0.6)]">
+            <div className="w-full pr-0 pl-[70px] rounded-3xl p-4 sm:p-6 lg:p-8">
               
               {/* Header */}
               <header className="flex items-center justify-between mb-10">
