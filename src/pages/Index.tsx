@@ -136,7 +136,7 @@ const Index = () => {
       {activeContent === 4 || activeContent === 5 ? (
         // MistHaven Content
         <div className="relative z-10 h-full w-full overflow-y-auto">
-          <div className="w-full pt-14 pb-[103px] px-0">
+          <div className="w-full pt-[72px] pb-[103px] px-0 pl-[72px]">
             <div className="w-full p-0">
               
               {/* Header */}
