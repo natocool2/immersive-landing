@@ -8,7 +8,7 @@ import UserMenu from "@/components/UserMenu";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import { useFullscreen } from "@/hooks/useFullscreen";
-import { DeveloperDashboard } from "@/components/DeveloperDashboard";
+import { DeveloperDashboardConnected } from "@/components/DeveloperDashboardConnected";
 import { Maximize, Minimize, Trees, Calendar, CalendarClock, Users, Dog, Check, Star, MapPin, ShieldCheck, Leaf, Flame, Moon, WifiOff, Book, Coffee, ArrowRight, Pencil, ChevronDown } from "lucide-react";
 
 const contentData = [
@@ -138,7 +138,7 @@ const Index = () => {
         // Developer Dashboard for Steam icon
         <div className="relative z-10 h-full w-full overflow-y-auto">
           <div className="w-full pt-[72px] pb-[106px] px-[16px]">
-            <DeveloperDashboard />
+            <DeveloperDashboardConnected />
           </div>
         </div>
       ) : activeContent === 4 ? (
