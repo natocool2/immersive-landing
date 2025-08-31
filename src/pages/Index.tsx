@@ -144,8 +144,13 @@ const Index = () => {
       ) : activeContent === 4 ? (
         // MistHaven Content
         <div className="relative z-10 h-full w-full overflow-y-auto">
+<<<<<<< HEAD
           <div className="w-full pt-[72px] pb-[106px] px-[16px]">
             <div>
+=======
+          <div className="w-full pt-[72px] pb-[103px] pr-4 pl-[72px]">
+            <div className="w-full p-0">
+>>>>>>> aadceb40887da066e08d2b2ce8f3b6bd1fb522ec
               
               {/* Header */}
               <header className="flex items-center justify-between mb-10">
