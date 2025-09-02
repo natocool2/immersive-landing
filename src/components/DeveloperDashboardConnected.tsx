@@ -583,6 +583,13 @@ export function DeveloperDashboardConnected() {
             )}
           </div>
         )}
+
+        {/* Containers Tab */}
+        {activeTab === 'containers' && (
+          <div className="w-full">
+            <ContainerDashboard />
+          </div>
+        )}
       </motion.div>
 
       {/* New Application Modal */}
