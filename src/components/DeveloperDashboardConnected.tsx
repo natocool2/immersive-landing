@@ -317,6 +317,7 @@ export function DeveloperDashboardConnected() {
         <TabButton id="applications" label="Applications" icon={Package} isActive={activeTab === 'applications'} />
         <TabButton id="keys" label="API Keys" icon={Key} isActive={activeTab === 'keys'} />
         <TabButton id="analytics" label="Analytics" icon={BarChart3} isActive={activeTab === 'analytics'} />
+        <TabButton id="containers" label="Containers" icon={Server} isActive={activeTab === 'containers'} />
         <TabButton id="settings" label="Settings" icon={Settings} isActive={activeTab === 'settings'} />
       </nav>
 
