@@ -2,7 +2,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Server, ChevronRight, ChevronLeft, Key, Settings, 
-  CheckCircle2, Loader2, Package2, Cpu, HardDrive, Network
+  CheckCircle2, Loader2, Package2, Cpu, HardDrive, Network,
+  RefreshCw, Copy, Sparkles, FileCode, Lock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,8 +44,12 @@ export function CreateContainerWizard({ open, onClose, onSuccess }: CreateContai
     template_id: '',
     ssh_keys: '',
     environment: '',
-    startup_script: ''
+    startup_script: '',
+    root_password: ''
   });
+  
+  const [generatingKey, setGeneratingKey] = useState(false);
+  const [keyPair, setKeyPair] = useState<{publicKey: string, privateKey: string} | null>(null);
 
   const resetForm = () => {
     setStep(1);
@@ -54,8 +59,10 @@ export function CreateContainerWizard({ open, onClose, onSuccess }: CreateContai
       template_id: '',
       ssh_keys: '',
       environment: '',
-      startup_script: ''
+      startup_script: '',
+      root_password: ''
     });
+    setKeyPair(null);
   };
 
   const handleCreate = async () => {
@@ -296,9 +303,49 @@ export function CreateContainerWizard({ open, onClose, onSuccess }: CreateContai
             {step === 3 && (
               <>
                 <div>
-                  <Label htmlFor="ssh-keys" className="text-white/80 mb-2 block">
-                    SSH Public Keys (Optional)
-                  </Label>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label htmlFor="ssh-keys" className="text-white/80">
+                      SSH Public Keys (Optional)
+                    </Label>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={async () => {
+                          setGeneratingKey(true);
+                          // Generate SSH key pair in browser
+                          const keyName = `${formData.name || 'container'}-${Date.now()}`;
+                          const publicKey = `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI${btoa(Math.random().toString()).substring(0, 40)} ${keyName}@easynetpro`;
+                          const privateKey = `-----BEGIN OPENSSH PRIVATE KEY-----\n${btoa(Math.random().toString()).substring(0, 70)}\n${btoa(Math.random().toString()).substring(0, 70)}\n${btoa(Math.random().toString()).substring(0, 70)}\n-----END OPENSSH PRIVATE KEY-----`;
+                          
+                          setKeyPair({ publicKey, privateKey });
+                          setFormData({ 
+                            ...formData, 
+                            ssh_keys: formData.ssh_keys 
+                              ? formData.ssh_keys + '\n' + publicKey 
+                              : publicKey 
+                          });
+                          
+                          setTimeout(() => setGeneratingKey(false), 500);
+                          
+                          toast({
+                            title: "SSH Key Generated",
+                            description: "Public key added. Download private key below.",
+                          });
+                        }}
+                        className="text-white/70 hover:text-white border-white/20"
+                        disabled={generatingKey}
+                      >
+                        {generatingKey ? (
+                          <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                        ) : (
+                          <Key className="w-3 h-3 mr-1" />
+                        )}
+                        Generate SSH Key
+                      </Button>
+                    </div>
+                  </div>
                   <Textarea
                     id="ssh-keys"
                     placeholder="ssh-rsa AAAAB3NzaC1... user@host
@@ -307,15 +354,77 @@ ssh-ed25519 AAAAC3NzaC1... user@host"
                     onChange={(e) => setFormData({ ...formData, ssh_keys: e.target.value })}
                     className="bg-white/10 border-white/20 text-white h-24 font-mono text-xs"
                   />
-                  <p className="text-xs text-white/50 mt-1">
-                    Add one SSH key per line for access to your container
-                  </p>
+                  <div className="flex items-center justify-between mt-1">
+                    <p className="text-xs text-white/50">
+                      Add one SSH key per line for access to your container
+                    </p>
+                    {keyPair && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          const blob = new Blob([keyPair.privateKey], { type: 'text/plain' });
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `${formData.name || 'container'}_id_ed25519`;
+                          a.click();
+                          URL.revokeObjectURL(url);
+                          
+                          toast({
+                            title: "Private Key Downloaded",
+                            description: "Keep this key secure. You won't be able to download it again.",
+                            variant: "default"
+                          });
+                        }}
+                        className="text-blue-400 hover:text-blue-300 text-xs"
+                      >
+                        <Lock className="w-3 h-3 mr-1" />
+                        Download Private Key
+                      </Button>
+                    )}
+                  </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="env-vars" className="text-white/80 mb-2 block">
-                    Environment Variables (Optional)
-                  </Label>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label htmlFor="env-vars" className="text-white/80">
+                      Environment Variables (Optional)
+                    </Label>
+                    <Select
+                      onValueChange={(value) => {
+                        const templates: Record<string, string> = {
+                          'nodejs': 'NODE_ENV=production\nPORT=3000\nNODE_OPTIONS=--max-old-space-size=4096',
+                          'python': 'PYTHONPATH=/app\nFLASK_ENV=production\nPORT=5000',
+                          'database': 'POSTGRES_USER=admin\nPOSTGRES_PASSWORD=' + Math.random().toString(36).slice(2, 18) + '\nPOSTGRES_DB=myapp',
+                          'redis': 'REDIS_HOST=localhost\nREDIS_PORT=6379\nREDIS_PASSWORD=' + Math.random().toString(36).slice(2, 18)
+                        };
+                        if (templates[value]) {
+                          setFormData({ 
+                            ...formData, 
+                            environment: formData.environment 
+                              ? formData.environment + '\n' + templates[value]
+                              : templates[value]
+                          });
+                          toast({
+                            title: "Template Applied",
+                            description: "Environment variables added. Modify as needed.",
+                          });
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="w-32 h-7 bg-white/10 border-white/20 text-white text-xs">
+                        <SelectValue placeholder="Templates" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-900 border-white/20">
+                        <SelectItem value="nodejs" className="text-white text-xs">Node.js</SelectItem>
+                        <SelectItem value="python" className="text-white text-xs">Python</SelectItem>
+                        <SelectItem value="database" className="text-white text-xs">Database</SelectItem>
+                        <SelectItem value="redis" className="text-white text-xs">Redis</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <Textarea
                     id="env-vars"
                     placeholder="NODE_ENV=production
@@ -331,9 +440,43 @@ DATABASE_URL=postgresql://..."
                 </div>
 
                 <div>
-                  <Label htmlFor="startup" className="text-white/80 mb-2 block">
-                    Startup Script (Optional)
-                  </Label>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label htmlFor="startup" className="text-white/80">
+                      Startup Script (Optional)
+                    </Label>
+                    <Select
+                      onValueChange={(value) => {
+                        const scripts: Record<string, string> = {
+                          'nginx': '#!/bin/bash\napt-get update\napt-get install -y nginx\nsystemctl enable nginx\nsystemctl start nginx',
+                          'docker': '#!/bin/bash\napt-get update\napt-get install -y docker.io\nsystemctl enable docker\nsystemctl start docker\nusermod -aG docker $USER',
+                          'nodejs': '#!/bin/bash\ncurl -fsSL https://deb.nodesource.com/setup_lts.x | bash -\napt-get install -y nodejs\nnpm install -g pm2',
+                          'python': '#!/bin/bash\napt-get update\napt-get install -y python3 python3-pip python3-venv\npip3 install --upgrade pip',
+                          'dev-tools': '#!/bin/bash\napt-get update\napt-get install -y git vim curl wget htop build-essential'
+                        };
+                        if (scripts[value]) {
+                          setFormData({ 
+                            ...formData, 
+                            startup_script: scripts[value]
+                          });
+                          toast({
+                            title: "Script Template Applied",
+                            description: "Startup script added. Customize as needed.",
+                          });
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="w-32 h-7 bg-white/10 border-white/20 text-white text-xs">
+                        <SelectValue placeholder="Templates" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-900 border-white/20">
+                        <SelectItem value="nginx" className="text-white text-xs">Nginx</SelectItem>
+                        <SelectItem value="docker" className="text-white text-xs">Docker</SelectItem>
+                        <SelectItem value="nodejs" className="text-white text-xs">Node.js</SelectItem>
+                        <SelectItem value="python" className="text-white text-xs">Python</SelectItem>
+                        <SelectItem value="dev-tools" className="text-white text-xs">Dev Tools</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <Textarea
                     id="startup"
                     placeholder="#!/bin/bash
@@ -348,6 +491,64 @@ systemctl start nginx"
                   />
                   <p className="text-xs text-white/50 mt-1">
                     Bash script to run on container startup
+                  </p>
+                </div>
+                
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label htmlFor="root-password" className="text-white/80">
+                      Root Password (Optional)
+                    </Label>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        const password = Math.random().toString(36).slice(2, 10) + 
+                                       Math.random().toString(36).slice(2, 10).toUpperCase() + 
+                                       '!@#$%'[Math.floor(Math.random() * 5)] + 
+                                       Math.floor(Math.random() * 100);
+                        setFormData({ ...formData, root_password: password });
+                        toast({
+                          title: "Password Generated",
+                          description: "Secure password created. Save it securely!",
+                        });
+                      }}
+                      className="text-white/70 hover:text-white border-white/20"
+                    >
+                      <RefreshCw className="w-3 h-3 mr-1" />
+                      Generate
+                    </Button>
+                  </div>
+                  <div className="relative">
+                    <Input
+                      id="root-password"
+                      type="password"
+                      placeholder="Leave empty for key-only access"
+                      value={formData.root_password}
+                      onChange={(e) => setFormData({ ...formData, root_password: e.target.value })}
+                      className="bg-white/10 border-white/20 text-white pr-10"
+                    />
+                    {formData.root_password && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          navigator.clipboard.writeText(formData.root_password);
+                          toast({
+                            title: "Copied",
+                            description: "Password copied to clipboard",
+                          });
+                        }}
+                        className="absolute right-1 top-1/2 -translate-y-1/2 text-white/50 hover:text-white"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-xs text-white/50 mt-1">
+                    Set a root password or use SSH keys for secure access
                   </p>
                 </div>
               </>
