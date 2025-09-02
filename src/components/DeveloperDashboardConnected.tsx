@@ -4,7 +4,8 @@ import {
   Code2, Key, BarChart3, Settings, Plus, Copy, Eye, EyeOff, 
   RotateCw, Trash2, Shield, Zap, Globe, Activity, Clock,
   Terminal, Sparkles, Layers, Package, Webhook, Database,
-  CheckCircle2, AlertCircle, ChevronRight, ArrowUpRight, Loader2, RefreshCw
+  CheckCircle2, AlertCircle, ChevronRight, ArrowUpRight, Loader2, RefreshCw,
+  Server
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +30,7 @@ import {
   type ApiKey,
   type ApplicationSettings
 } from "@/services/developerApi";
+import { ContainerDashboard } from "./ContainerDashboard";
 
 export function DeveloperDashboardConnected() {
   const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'keys' | 'analytics' | 'settings'>('overview');
