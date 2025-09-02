@@ -315,7 +315,7 @@ export function ContainerMetrics({ containers }: ContainerMetricsProps) {
           <div className="text-sm text-amber-200">
             <p className="font-medium">Monitoring Active</p>
             <p className="text-xs text-amber-200/70 mt-1">
-              Alerts will be triggered when CPU > 80%, Memory > 90%, or Disk > 85%
+              Alerts will be triggered when CPU &gt; 80%, Memory &gt; 90%, or Disk &gt; 85%
             </p>
           </div>
         </div>
