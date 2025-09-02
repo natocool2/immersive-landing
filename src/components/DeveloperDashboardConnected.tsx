@@ -33,7 +33,7 @@ import {
 import { ContainerDashboard } from "./ContainerDashboard";
 
 export function DeveloperDashboardConnected() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'keys' | 'analytics' | 'settings'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'keys' | 'analytics' | 'containers' | 'settings'>('overview');
   const [showNewKeyModal, setShowNewKeyModal] = useState(false);
   const [showNewAppModal, setShowNewAppModal] = useState(false);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
