@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { containerApi } from "@/services/containerApi";
+import { generateSSHKeyPair, generateSecurePassword, startupScriptTemplates, envTemplates } from "@/utils/sshKeyGenerator";
 
 interface CreateContainerWizardProps {
   open: boolean;
@@ -314,25 +315,32 @@ export function CreateContainerWizard({ open, onClose, onSuccess }: CreateContai
                         variant="outline"
                         onClick={async () => {
                           setGeneratingKey(true);
-                          // Generate SSH key pair in browser
-                          const keyName = `${formData.name || 'container'}-${Date.now()}`;
-                          const publicKey = `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI${btoa(Math.random().toString()).substring(0, 40)} ${keyName}@easynetpro`;
-                          const privateKey = `-----BEGIN OPENSSH PRIVATE KEY-----\n${btoa(Math.random().toString()).substring(0, 70)}\n${btoa(Math.random().toString()).substring(0, 70)}\n${btoa(Math.random().toString()).substring(0, 70)}\n-----END OPENSSH PRIVATE KEY-----`;
-                          
-                          setKeyPair({ publicKey, privateKey });
-                          setFormData({ 
-                            ...formData, 
-                            ssh_keys: formData.ssh_keys 
-                              ? formData.ssh_keys + '\n' + publicKey 
-                              : publicKey 
-                          });
-                          
-                          setTimeout(() => setGeneratingKey(false), 500);
-                          
-                          toast({
-                            title: "SSH Key Generated",
-                            description: "Public key added. Download private key below.",
-                          });
+                          try {
+                            // Generate SSH key pair using Web Crypto API
+                            const keyName = `${formData.name || 'container'}-${Date.now()}`;
+                            const keys = await generateSSHKeyPair(keyName);
+                            
+                            setKeyPair(keys);
+                            setFormData({ 
+                              ...formData, 
+                              ssh_keys: formData.ssh_keys 
+                                ? formData.ssh_keys + '\n' + keys.publicKey 
+                                : keys.publicKey 
+                            });
+                            
+                            toast({
+                              title: "SSH Key Generated",
+                              description: "Public key added. Download private key below.",
+                            });
+                          } catch (error) {
+                            toast({
+                              title: "Error",
+                              description: "Failed to generate SSH key",
+                              variant: "destructive"
+                            });
+                          } finally {
+                            setGeneratingKey(false);
+                          }
                         }}
                         className="text-white/70 hover:text-white border-white/20"
                         disabled={generatingKey}
@@ -394,18 +402,13 @@ ssh-ed25519 AAAAC3NzaC1... user@host"
                     </Label>
                     <Select
                       onValueChange={(value) => {
-                        const templates: Record<string, string> = {
-                          'nodejs': 'NODE_ENV=production\nPORT=3000\nNODE_OPTIONS=--max-old-space-size=4096',
-                          'python': 'PYTHONPATH=/app\nFLASK_ENV=production\nPORT=5000',
-                          'database': 'POSTGRES_USER=admin\nPOSTGRES_PASSWORD=' + Math.random().toString(36).slice(2, 18) + '\nPOSTGRES_DB=myapp',
-                          'redis': 'REDIS_HOST=localhost\nREDIS_PORT=6379\nREDIS_PASSWORD=' + Math.random().toString(36).slice(2, 18)
-                        };
-                        if (templates[value]) {
+                        const template = envTemplates[value as keyof typeof envTemplates];
+                        if (template) {
                           setFormData({ 
                             ...formData, 
                             environment: formData.environment 
-                              ? formData.environment + '\n' + templates[value]
-                              : templates[value]
+                              ? formData.environment + '\n' + template
+                              : template
                           });
                           toast({
                             title: "Template Applied",
@@ -422,6 +425,8 @@ ssh-ed25519 AAAAC3NzaC1... user@host"
                         <SelectItem value="python" className="text-white text-xs">Python</SelectItem>
                         <SelectItem value="database" className="text-white text-xs">Database</SelectItem>
                         <SelectItem value="redis" className="text-white text-xs">Redis</SelectItem>
+                        <SelectItem value="api" className="text-white text-xs">API Keys</SelectItem>
+                        <SelectItem value="monitoring" className="text-white text-xs">Monitoring</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -446,17 +451,11 @@ DATABASE_URL=postgresql://..."
                     </Label>
                     <Select
                       onValueChange={(value) => {
-                        const scripts: Record<string, string> = {
-                          'nginx': '#!/bin/bash\napt-get update\napt-get install -y nginx\nsystemctl enable nginx\nsystemctl start nginx',
-                          'docker': '#!/bin/bash\napt-get update\napt-get install -y docker.io\nsystemctl enable docker\nsystemctl start docker\nusermod -aG docker $USER',
-                          'nodejs': '#!/bin/bash\ncurl -fsSL https://deb.nodesource.com/setup_lts.x | bash -\napt-get install -y nodejs\nnpm install -g pm2',
-                          'python': '#!/bin/bash\napt-get update\napt-get install -y python3 python3-pip python3-venv\npip3 install --upgrade pip',
-                          'dev-tools': '#!/bin/bash\napt-get update\napt-get install -y git vim curl wget htop build-essential'
-                        };
-                        if (scripts[value]) {
+                        const script = startupScriptTemplates[value as keyof typeof startupScriptTemplates];
+                        if (script) {
                           setFormData({ 
                             ...formData, 
-                            startup_script: scripts[value]
+                            startup_script: script
                           });
                           toast({
                             title: "Script Template Applied",
@@ -473,7 +472,8 @@ DATABASE_URL=postgresql://..."
                         <SelectItem value="docker" className="text-white text-xs">Docker</SelectItem>
                         <SelectItem value="nodejs" className="text-white text-xs">Node.js</SelectItem>
                         <SelectItem value="python" className="text-white text-xs">Python</SelectItem>
-                        <SelectItem value="dev-tools" className="text-white text-xs">Dev Tools</SelectItem>
+                        <SelectItem value="devTools" className="text-white text-xs">Dev Tools</SelectItem>
+                        <SelectItem value="database" className="text-white text-xs">Database</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -504,10 +504,7 @@ systemctl start nginx"
                       size="sm"
                       variant="outline"
                       onClick={() => {
-                        const password = Math.random().toString(36).slice(2, 10) + 
-                                       Math.random().toString(36).slice(2, 10).toUpperCase() + 
-                                       '!@#$%'[Math.floor(Math.random() * 5)] + 
-                                       Math.floor(Math.random() * 100);
+                        const password = generateSecurePassword();
                         setFormData({ ...formData, root_password: password });
                         toast({
                           title: "Password Generated",
