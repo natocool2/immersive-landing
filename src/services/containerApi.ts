@@ -66,13 +66,17 @@ export interface CreateContainerRequest {
 // Helper to get auth token
 async function getAuthToken(): Promise<string | null> {
   try {
-    const response = await fetch('https://auth.easynetpro.com/api/v1/session', {
+    const response = await fetch('https://auth.easynetpro.com/api/auth/session', {
       credentials: 'include'
     });
     
     if (response.ok) {
       const data = await response.json();
-      return data.token || null;
+      // Session endpoint returns authenticated status and user info
+      if (data.authenticated) {
+        // If token is in response, return it, otherwise session cookie will be used
+        return data.token?.value || null;
+      }
     }
   } catch (error) {
     console.error('Failed to get auth token:', error);
