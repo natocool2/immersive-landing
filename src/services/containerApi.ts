@@ -65,23 +65,9 @@ export interface CreateContainerRequest {
 
 // Helper to get auth token
 async function getAuthToken(): Promise<string | null> {
-  try {
-    const response = await fetch('https://auth.easynetpro.com/api/auth/session', {
-      credentials: 'include'
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      // Session endpoint returns authenticated status and user info
-      if (data.authenticated) {
-        // If token is in response, return it, otherwise session cookie will be used
-        return data.token?.value || null;
-      }
-    }
-  } catch (error) {
-    console.error('Failed to get auth token:', error);
-  }
-  return null;
+  // Get token from localStorage (set by AuthContext)
+  const token = localStorage.getItem('easynet_token');
+  return token;
 }
 
 // API request helper
