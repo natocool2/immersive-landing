@@ -1,10 +1,16 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role?: string;
+  permissions?: string[];
+}
 
 interface AuthContextType {
   user: User | null;
-  session: Session | null;
+  token: string | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string, displayName?: string) => Promise<{ error: any }>;
@@ -13,6 +19,9 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const AUTH_API = 'https://auth.easynetpro.com/api/auth';
+const CONTAINER_API = 'https://api.easynetpro.com/api/v1';
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -24,103 +33,156 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Check for existing session on mount
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
-
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    checkSession();
   }, []);
 
+  const checkSession = async () => {
+    try {
+      // First check if we have a stored token
+      const storedToken = localStorage.getItem('easynet_token');
+      const storedUser = localStorage.getItem('easynet_user');
+      
+      if (storedToken && storedUser) {
+        setToken(storedToken);
+        setUser(JSON.parse(storedUser));
+        setLoading(false);
+        return;
+      }
+
+      // Check session with auth service
+      const response = await fetch(`${AUTH_API}/session`, {
+        credentials: 'include',
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.authenticated && data.user) {
+          setUser(data.user);
+          // Get token if available
+          if (data.token) {
+            setToken(data.token);
+            localStorage.setItem('easynet_token', data.token);
+            localStorage.setItem('easynet_user', JSON.stringify(data.user));
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Session check failed:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signIn = async (email: string, password: string) => {
-    // Input validation
-    if (!email || !password) {
-      return { error: { message: 'Email e senha são obrigatórios' } };
+    try {
+      // Try auth.easynetpro.com first
+      const authResponse = await fetch(`${AUTH_API}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (authResponse.ok) {
+        const data = await authResponse.json();
+        setUser(data.user);
+        if (data.token) {
+          setToken(data.token);
+          localStorage.setItem('easynet_token', data.token);
+          localStorage.setItem('easynet_user', JSON.stringify(data.user));
+        }
+        return { error: null };
+      }
+
+      // If auth service fails, try container API directly
+      const apiResponse = await fetch(`${CONTAINER_API}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (apiResponse.ok) {
+        const data = await apiResponse.json();
+        const userData = data.user || {
+          id: data.sub || 'unknown',
+          email: email,
+          name: data.name || email.split('@')[0],
+          role: data.role,
+          permissions: data.permissions,
+        };
+        
+        setUser(userData);
+        setToken(data.access_token);
+        localStorage.setItem('easynet_token', data.access_token);
+        localStorage.setItem('easynet_user', JSON.stringify(userData));
+        return { error: null };
+      }
+
+      const error = await apiResponse.json();
+      return { error: error.detail || 'Login failed' };
+    } catch (error) {
+      return { error: error.message || 'Network error' };
     }
-    
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email.trim().toLowerCase(),
-      password,
-    });
-    
-    // Don't expose detailed auth errors to prevent enumeration attacks
-    if (error && error.message.includes('Invalid')) {
-      return { error: { message: 'Email ou senha inválidos' } };
-    }
-    
-    return { error };
   };
 
   const signUp = async (email: string, password: string, displayName?: string) => {
-    // Input validation
-    if (!email || !password) {
-      return { error: { message: 'Email e senha são obrigatórios' } };
-    }
-    
-    // Password strength validation
-    if (password.length < 8) {
-      return { error: { message: 'A senha deve ter pelo menos 8 caracteres' } };
-    }
-    
-    // Sanitize display name
-    const sanitizedDisplayName = displayName?.trim().substring(0, 50) || '';
-    
-    const redirectUrl = `${window.location.origin}/`;
-    
-    const { error } = await supabase.auth.signUp({
-      email: email.trim().toLowerCase(),
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          display_name: sanitizedDisplayName,
-        }
+    try {
+      const response = await fetch(`${AUTH_API}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password, name: displayName }),
+      });
+
+      if (response.ok) {
+        // Auto sign in after registration
+        return signIn(email, password);
       }
-    });
-    return { error };
+
+      const error = await response.json();
+      return { error: error.detail || 'Registration failed' };
+    } catch (error) {
+      return { error: error.message || 'Network error' };
+    }
   };
 
   const signInWithProvider = async (provider: 'google' | 'github' | 'discord') => {
-    console.log('Starting OAuth signin with provider:', provider);
-    console.log('Current window.location.origin:', window.location.origin);
-    
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: `${window.location.origin}/`,
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent',
-        }
-      },
-    });
-    
-    console.log('OAuth signin result:', { error });
-    return { error };
+    try {
+      // OAuth flow - redirect to provider
+      window.location.href = `${AUTH_API}/${provider}`;
+      return { error: null };
+    } catch (error) {
+      return { error: error.message || 'OAuth error' };
+    }
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      // Call logout endpoint
+      await fetch(`${AUTH_API}/logout`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+    
+    // Clear local state
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem('easynet_token');
+    localStorage.removeItem('easynet_user');
   };
 
   const value = {
     user,
-    session,
+    token,
     loading,
     signIn,
     signUp,
@@ -130,3 +192,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+// Compatibility exports for existing code
+export type { User };
+export const Session = null; // For compatibility
