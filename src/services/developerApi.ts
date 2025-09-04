@@ -49,37 +49,18 @@ export interface ApplicationSettings {
   primary_color?: string;
 }
 
-// Helper to get auth token from cookie
-function getAuthToken(): string | null {
-  const cookies = document.cookie.split(';');
-  for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split('=');
-    if (name === 'auth_token') {
-      return value;
-    }
-  }
-  return null;
-}
-
-// API request helper
+// API request helper - authentication handled by auth.easynetpro.com cookies
 async function apiRequest(endpoint: string, options: RequestInit = {}) {
-  const token = getAuthToken();
-  
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
     ...options.headers,
   };
   
-  // Add auth token if available
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-  
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
       headers,
-      credentials: 'include', // Include cookies
+      credentials: 'include', // Include cookies for auth
     });
     
     if (response.status === 401) {
