@@ -74,24 +74,35 @@ async function apiRequest(
     ...options.headers
   };
 
-  const response = await fetch(`${API_BASE}${endpoint}`, {
+  const url = `${API_BASE}${endpoint}`;
+  console.log('[API Request] URL:', url);
+  console.log('[API Request] Options:', { ...options, headers, credentials: 'include' });
+
+  const response = await fetch(url, {
     ...options,
     headers,
     credentials: 'include' // Send cookies for auth
   });
 
+  console.log('[API Request] Response status:', response.status);
+  console.log('[API Request] Response headers:', response.headers);
+
   if (!response.ok) {
     // Handle 401 Unauthorized - redirect to login
     if (response.status === 401) {
+      console.error('[API Request] 401 Unauthorized - redirecting to login');
       window.location.href = '/auth/login?redirect=' + encodeURIComponent(window.location.href);
       throw new Error('Authentication required');
     }
     
     const error = await response.text();
+    console.error('[API Request] Error response:', error);
     throw new Error(error || `Request failed: ${response.statusText}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  console.log('[API Request] Success response:', data);
+  return data;
 }
 
 // Container API
