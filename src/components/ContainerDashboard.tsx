@@ -38,9 +38,15 @@ export function ContainerDashboard() {
     else setRefreshing(true);
     
     try {
+      console.log('[ContainerDashboard] Calling containerApi.list()...');
       const response = await containerApi.list();
+      console.log('[ContainerDashboard] Response from API:', response);
+      console.log('[ContainerDashboard] Containers received:', response.containers);
+      console.log('[ContainerDashboard] Number of containers:', response.containers?.length || 0);
+      
       if (response.success) {
         setContainers(response.containers);
+        console.log('[ContainerDashboard] Containers set in state:', response.containers);
         
         // Calculate stats
         const running = response.containers.filter(c => c.status === 'running').length;
