@@ -105,7 +105,9 @@ export const containerApi = {
         ...(status ? { status } : {})
       });
       
+      console.log('[ContainerAPI] Fetching containers with params:', params.toString());
       const data = await apiRequest(`/containers?${params}`);
+      console.log('[ContainerAPI] Response received:', data);
       
       return {
         success: true,
@@ -116,7 +118,12 @@ export const containerApi = {
         pages: data.pages || 1
       };
     } catch (error: any) {
-      console.error('Failed to list containers:', error);
+      console.error('[ContainerAPI] Failed to list containers:', error);
+      console.error('[ContainerAPI] Error details:', {
+        message: error.message,
+        stack: error.stack,
+        response: error.response
+      });
       return {
         success: false,
         containers: [],
