@@ -65,34 +65,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (email: string, password: string) => {
     try {
-      // Try auth.easynetpro.com first
-      const authResponse = await fetch(`${AUTH_API}/login`, {
+      // Use local auth endpoint (proxied to auth gateway)
+      const response = await fetch('/auth/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 
-      if (authResponse.ok) {
-        const data = await authResponse.json();
+      if (response.ok) {
+        const data = await response.json();
         setUser(data.user);
-        if (data.token) {
-          setToken(data.token);
-          localStorage.setItem('easynet_token', data.token);
-          localStorage.setItem('easynet_user', JSON.stringify(data.user));
-        }
+        setToken('cookie-session');
         return { error: null };
       }
 
-      // If auth service fails, try container API directly
-      const apiResponse = await fetch(`${CONTAINER_API}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (apiResponse.ok) {
-        const data = await apiResponse.json();
+      const errorData = await response.json();
         const userData = data.user || {
           id: data.sub || 'unknown',
           email: email,
