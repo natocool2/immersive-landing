@@ -80,24 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: null };
       }
 
-      const errorData = await response.json();
-        const userData = data.user || {
-          id: data.sub || 'unknown',
-          email: email,
-          name: data.name || email.split('@')[0],
-          role: data.role,
-          permissions: data.permissions,
-        };
-        
-        setUser(userData);
-        setToken(data.access_token);
-        localStorage.setItem('easynet_token', data.access_token);
-        localStorage.setItem('easynet_user', JSON.stringify(userData));
-        return { error: null };
-      }
-
-      const error = await apiResponse.json();
-      return { error: error.detail || 'Login failed' };
+      return { error: errorData.error || 'Login failed' };
     } catch (error) {
       return { error: error.message || 'Network error' };
     }
