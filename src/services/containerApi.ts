@@ -1,7 +1,7 @@
 import { toast } from "@/hooks/use-toast";
 
 // Use local API endpoint - nginx handles authentication
-const API_BASE = '/api';
+const API_BASE = '/api/v1';
 
 // Types
 export interface Container {
