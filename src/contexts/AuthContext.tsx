@@ -109,8 +109,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithProvider = async (provider: 'google' | 'github' | 'discord') => {
     try {
-      // OAuth flow - redirect to provider
-      window.location.href = `${AUTH_API}/${provider}`;
+      // OAuth flow - redirect to provider with current URL as redirect
+      const currentUrl = window.location.href;
+      window.location.href = `/auth/api/auth/${provider}?redirect_uri=${encodeURIComponent(currentUrl)}`;
       return { error: null };
     } catch (error) {
       return { error: error.message || 'OAuth error' };
@@ -120,10 +121,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signOut = async () => {
     try {
       // Call logout endpoint
-      await fetch(`${AUTH_API}/logout`, {
+      await fetch('/auth/api/auth/logout', {
         method: 'POST',
         credentials: 'include',
-        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
       });
     } catch (error) {
       console.error('Logout error:', error);
