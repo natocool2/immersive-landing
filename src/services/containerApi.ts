@@ -119,8 +119,10 @@ export const containerApi = {
       console.log('[ContainerAPI] Fetching containers with params:', params.toString());
       const data = await apiRequest(`/containers?${params}`);
       console.log('[ContainerAPI] Response received:', data);
+      console.log('[ContainerAPI] Containers in response:', data.containers);
+      console.log('[ContainerAPI] Total containers:', data.total);
       
-      return {
+      const result = {
         success: true,
         containers: data.containers || [],
         total: data.total || 0,
@@ -128,6 +130,9 @@ export const containerApi = {
         per_page: data.per_page || 10,
         pages: data.pages || 1
       };
+      
+      console.log('[ContainerAPI] Returning to component:', result);
+      return result;
     } catch (error: any) {
       console.error('[ContainerAPI] Failed to list containers:', error);
       console.error('[ContainerAPI] Error details:', {
