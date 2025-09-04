@@ -64,30 +64,20 @@ export interface CreateContainerRequest {
   startup_script?: string;
 }
 
-// Helper to get auth token
-async function getAuthToken(): Promise<string | null> {
-  // Get token from localStorage (set by AuthContext)
-  const token = localStorage.getItem('easynet_token');
-  return token;
-}
-
-// API request helper
+// API request helper - authentication handled by nginx
 async function apiRequest(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<any> {
-  const token = await getAuthToken();
-  
   const headers = {
     'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...options.headers
   };
 
   const response = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
     headers,
-    credentials: 'include'
+    credentials: 'include' // Send cookies for auth
   });
 
   if (!response.ok) {
