@@ -43,32 +43,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const checkSession = async () => {
     try {
-      // First check if we have a stored token
-      const storedToken = localStorage.getItem('easynet_token');
-      const storedUser = localStorage.getItem('easynet_user');
-      
-      if (storedToken && storedUser) {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-        setLoading(false);
-        return;
-      }
-
-      // Check session with auth service
-      const response = await fetch(`${AUTH_API}/session`, {
-        credentials: 'include',
+      // Check session via auth gateway (cookie-based authentication)
+      const response = await fetch('/auth/api/auth/session', {
+        credentials: 'include'
       });
       
       if (response.ok) {
         const data = await response.json();
         if (data.authenticated && data.user) {
           setUser(data.user);
-          // Get token if available
-          if (data.token) {
-            setToken(data.token);
-            localStorage.setItem('easynet_token', data.token);
-            localStorage.setItem('easynet_user', JSON.stringify(data.user));
-          }
+          // Token is managed via cookies now, not needed in frontend
+          setToken('cookie-session');
         }
       }
     } catch (error) {
