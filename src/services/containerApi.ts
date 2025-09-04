@@ -81,6 +81,12 @@ async function apiRequest(
   });
 
   if (!response.ok) {
+    // Handle 401 Unauthorized - redirect to login
+    if (response.status === 401) {
+      window.location.href = '/auth/login?redirect=' + encodeURIComponent(window.location.href);
+      throw new Error('Authentication required');
+    }
+    
     const error = await response.text();
     throw new Error(error || `Request failed: ${response.statusText}`);
   }
