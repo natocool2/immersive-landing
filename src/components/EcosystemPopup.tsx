@@ -138,17 +138,7 @@ const EcosystemPopup = ({ isOpen, onClose }: EcosystemPopupProps) => {
                       }
                     `}
                   >
-                    {/* Status Badge */}
-                    {app.status === "maintenance" && (
-                      <div className="absolute top-3 right-3 px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded-full border border-yellow-500/30">
-                        Maintenance
-                      </div>
-                    )}
-                    {app.status === "coming-soon" && (
-                      <div className="absolute top-3 right-3 px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-full border border-blue-500/30">
-                        Coming Soon
-                      </div>
-                    )}
+                    {/* Status Badge - removed since all apps are active now */}
 
                     {/* Icon with gradient background */}
                     <div className={`
