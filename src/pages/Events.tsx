@@ -225,7 +225,7 @@ const EventCard = ({ event, onQuickView }: { event: Event; onQuickView: (event: 
 
           {/* Location */}
           <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-            {event.location.is_online ? (
+            {event.location?.is_online ? (
               <Globe className="w-4 h-4" />
             ) : (
               <MapPin className="w-4 h-4" />
