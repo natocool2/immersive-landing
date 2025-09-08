@@ -155,9 +155,9 @@ const EventCard = ({ event, onQuickView }: { event: Event; onQuickView: (event: 
       <div onClick={() => onQuickView(event)} className="relative">
         {/* Image */}
         <div className="relative h-48 bg-gradient-to-br from-purple-500 to-indigo-600 overflow-hidden">
-          {event.cover_image ? (
+          {event.cover_image_url ? (
             <img 
-              src={event.cover_image} 
+              src={event.cover_image_url} 
               alt={event.title}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
               loading="lazy"
@@ -169,11 +169,13 @@ const EventCard = ({ event, onQuickView }: { event: Event; onQuickView: (event: 
           )}
           
           {/* Price Badge */}
-          <div className="absolute top-3 right-3">
-            <Badge variant={event.pricing.is_free ? "secondary" : "default"} className="shadow-lg">
-              {formatPrice()}
-            </Badge>
-          </div>
+          {event.pricing && (
+            <div className="absolute top-3 right-3">
+              <Badge variant={event.pricing.is_free ? "secondary" : "default"} className="shadow-lg">
+                {formatPrice()}
+              </Badge>
+            </div>
+          )}
 
           {/* Category Badge */}
           {event.category && (
