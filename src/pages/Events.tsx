@@ -150,6 +150,19 @@ const EventCard = ({ event, onQuickView }: { event: Event; onQuickView: (event: 
     ? "Online Event" 
     : event.location?.city || event.location?.venue || "TBA";
 
+  const formatPrice = () => {
+    if (!event.pricing) return "Price TBD";
+    if (event.pricing.is_free) return "FREE";
+    const currency = event.pricing.currency === "USD" ? "$" : event.pricing.currency || "$";
+    if (event.pricing.min_price === event.pricing.max_price) {
+      return `${currency}${event.pricing.min_price || 0}`;
+    }
+    if (event.pricing.min_price !== undefined && event.pricing.max_price !== undefined) {
+      return `${currency}${event.pricing.min_price} - ${currency}${event.pricing.max_price}`;
+    }
+    return "Price TBD";
+  };
+
   return (
     <Card className="group hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer overflow-hidden">
       <div onClick={() => onQuickView(event)} className="relative">
