@@ -666,151 +666,32 @@ const Events = () => {
         }
       });
 
-      // For demo, using mock data since API is not fully set up
-      // In production, replace with: 
-      // const response = await fetch(`https://api.easynetpro.com/api/v1/public/events?${params}`);
+      // Fetch from real API
+      const response = await fetch(`https://api.easynetpro.com/api/v1/public/events?${params}`);
       
-      // Mock response for demonstration
-      const mockEvents: Event[] = [
-        {
-          id: 1,
-          title: "Tech Innovation Summit 2025",
-          slug: "tech-innovation-summit-2025",
-          description: "Join industry leaders for a day of insights into the future of technology, AI, and digital transformation.",
-          start_date: "2025-09-15T09:00:00",
-          end_date: "2025-09-15T18:00:00",
-          location: {
-            venue_name: "Convention Center",
-            city: "San Francisco",
-            state: "CA",
-            country: "USA",
-            is_online: false
-          },
-          cover_image: null,
-          organizer: {
-            id: 1,
-            name: "TechEvents Inc",
-            description: "Leading tech event organizer"
-          },
-          pricing: {
-            currency: "USD",
-            min_price: 99,
-            max_price: 299,
-            is_free: false
-          },
-          attendee_count: 245,
-          tickets_available: 55,
-          category: "tech",
-          tags: ["technology", "AI", "innovation"],
-          url: "https://eventener.com/events/1"
-        },
-        {
-          id: 2,
-          title: "Virtual Marketing Masterclass",
-          slug: "virtual-marketing-masterclass",
-          description: "Learn the latest digital marketing strategies from top experts in this comprehensive online workshop.",
-          start_date: "2025-09-20T14:00:00",
-          location: {
-            is_online: true
-          },
-          cover_image: null,
-          organizer: {
-            id: 2,
-            name: "Marketing Academy",
-            description: "Professional marketing education"
-          },
-          pricing: {
-            currency: "USD",
-            min_price: 0,
-            max_price: 0,
-            is_free: true
-          },
-          attendee_count: 512,
-          tickets_available: null,
-          category: "business",
-          tags: ["marketing", "digital", "online"],
-          url: "https://eventener.com/events/2"
-        },
-        {
-          id: 3,
-          title: "Jazz Night at the Park",
-          slug: "jazz-night-park",
-          description: "An evening of smooth jazz under the stars featuring local and international artists.",
-          start_date: "2025-09-22T19:00:00",
-          end_date: "2025-09-22T23:00:00",
-          location: {
-            venue_name: "Central Park Amphitheater",
-            city: "New York",
-            state: "NY",
-            country: "USA",
-            is_online: false
-          },
-          cover_image: null,
-          organizer: {
-            id: 3,
-            name: "NYC Arts Council",
-            description: "Promoting arts and culture"
-          },
-          pricing: {
-            currency: "USD",
-            min_price: 25,
-            max_price: 75,
-            is_free: false
-          },
-          attendee_count: 150,
-          tickets_available: 100,
-          category: "music",
-          tags: ["jazz", "music", "outdoor"],
-          url: "https://eventener.com/events/3"
-        }
-      ];
+      if (!response.ok) {
+        throw new Error(`Failed to fetch events: ${response.statusText}`);
+      }
 
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Filter mock data based on filters
-      let filteredEvents = [...mockEvents];
+      const data = await response.json();
       
-      if (filters.search) {
-        const searchLower = filters.search.toLowerCase();
-        filteredEvents = filteredEvents.filter(e => 
-          e.title.toLowerCase().includes(searchLower) ||
-          e.description?.toLowerCase().includes(searchLower)
-        );
-      }
-
-      if (filters.category) {
-        filteredEvents = filteredEvents.filter(e => e.category === filters.category);
-      }
-
-      if (filters.is_online !== undefined) {
-        filteredEvents = filteredEvents.filter(e => e.location.is_online === filters.is_online);
-      }
-
-      // Set results
-      setEvents(filteredEvents);
+      // Set events from API response
+      setEvents(data.data || []);
+      
+      // Set metadata from API response
       setMeta({
-        total: filteredEvents.length,
-        page: page,
-        limit: meta.limit,
-        pages: Math.ceil(filteredEvents.length / meta.limit),
-        has_next: page < Math.ceil(filteredEvents.length / meta.limit),
-        has_prev: page > 1
+        total: data.meta?.total || 0,
+        page: data.meta?.page || page,
+        limit: data.meta?.limit || meta.limit,
+        pages: data.meta?.total_pages || 0,
+        has_next: data.meta?.has_next || false,
+        has_prev: data.meta?.has_prev || false
       });
       
-      // Set categories
-      const cats = mockEvents.reduce((acc, event) => {
-        if (event.category) {
-          const existing = acc.find(c => c.value === event.category);
-          if (existing) {
-            existing.count++;
-          } else {
-            acc.push({ value: event.category, count: 1 });
-          }
-        }
-        return acc;
-      }, [] as Array<{ value: string; count: number }>);
-      setCategories(cats);
+      // Set categories from API response
+      if (data.categories) {
+        setCategories(data.categories);
+      }
 
     } catch (err) {
       setError("Failed to load events. Please try again.");
