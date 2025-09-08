@@ -128,24 +128,6 @@ const ITEMS_PER_PAGE = [
 // ============= COMPONENTS =============
 
 const EventCard = ({ event, onQuickView }: { event: Event; onQuickView: (event: Event) => void }) => {
-  const formatPrice = () => {
-    if (event.pricing.is_free) return "Free";
-    const currency = event.pricing.currency === "USD" ? "$" : event.pricing.currency;
-    if (event.pricing.min_price === event.pricing.max_price) {
-      return `${currency}${event.pricing.min_price}`;
-    }
-    return `${currency}${event.pricing.min_price} - ${currency}${event.pricing.max_price}`;
-  };
-
-  const formatDate = () => {
-    try {
-      const date = parseISO(event.start_date);
-      return format(date, "EEE, MMM d • h:mm a");
-    } catch {
-      return event.start_date;
-    }
-  };
-
   const locationText = event.location?.is_online 
     ? "Online Event" 
     : event.location?.city || event.location?.venue || "TBA";
