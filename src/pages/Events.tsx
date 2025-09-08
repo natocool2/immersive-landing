@@ -586,7 +586,7 @@ const EventQuickView = ({ event, isOpen, onClose }: { event: Event | null; isOpe
 
             {/* Location */}
             <div className="flex gap-3">
-              {event.location.is_online ? (
+              {event.location?.is_online ? (
                 <Globe className="w-5 h-5 text-purple-600 mt-0.5" />
               ) : (
                 <MapPin className="w-5 h-5 text-purple-600 mt-0.5" />
