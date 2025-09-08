@@ -519,11 +519,11 @@ const EventQuickView = ({ event, isOpen, onClose }: { event: Event | null; isOpe
     if (event.location.is_online) return "Online Event";
     
     const parts = [
-      event.location.venue_name,
-      event.location.address,
-      event.location.city,
-      event.location.state,
-      event.location.country
+      event.location?.venue,
+      event.location?.address,
+      event.location?.city,
+      event.location?.state,
+      event.location?.country
     ].filter(Boolean);
     
     return parts.join(", ") || "Location TBA";
