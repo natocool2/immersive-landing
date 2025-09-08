@@ -516,7 +516,7 @@ const EventQuickView = ({ event, isOpen, onClose }: { event: Event | null; isOpe
   };
 
   const locationText = () => {
-    if (event.location.is_online) return "Online Event";
+    if (event.location?.is_online) return "Online Event";
     
     const parts = [
       event.location?.venue,
