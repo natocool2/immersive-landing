@@ -675,17 +675,17 @@ const Events = () => {
 
       const data = await response.json();
       
-      // Set events from API response
-      setEvents(data.data || []);
+      // Set events from API response (API returns {events: [...], total: n, ...})
+      setEvents(data.events || []);
       
       // Set metadata from API response
       setMeta({
-        total: data.meta?.total || 0,
-        page: data.meta?.page || page,
-        limit: data.meta?.limit || meta.limit,
-        pages: data.meta?.total_pages || 0,
-        has_next: data.meta?.has_next || false,
-        has_prev: data.meta?.has_prev || false
+        total: data.total || 0,
+        page: data.page || page,
+        limit: data.per_page || meta.limit,
+        pages: data.total_pages || 0,
+        has_next: data.page < data.total_pages,
+        has_prev: data.page > 1
       });
       
       // Set categories from API response
