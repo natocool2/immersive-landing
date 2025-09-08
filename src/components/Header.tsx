@@ -27,7 +27,12 @@ const Header = () => {
           <Button variant="ghost" size="sm" className="text-white hover:text-white/80">
             Ingenious Gen
           </Button>
-          <Button variant="ghost" size="sm" className="text-white hover:text-white/80">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-white hover:text-white/80"
+            onClick={() => navigate('/events')}
+          >
             Events
           </Button>
           <Button 
