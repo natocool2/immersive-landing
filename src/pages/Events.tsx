@@ -19,30 +19,32 @@ import Header from "@/components/Header";
 // ============= TYPES =============
 
 interface EventLocation {
-  venue_name?: string;
+  venue?: string;
   address?: string;
   city?: string;
   state?: string;
   country?: string;
-  postal_code?: string;
-  latitude?: number;
-  longitude?: number;
-  is_online: boolean;
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  } | null;
+  is_online?: boolean;
 }
 
 interface EventOrganizer {
   id: number;
   name: string;
+  email?: string;
   logo_url?: string;
   website?: string;
   description?: string;
 }
 
 interface EventPricing {
-  currency: string;
+  currency?: string;
   min_price?: number;
   max_price?: number;
-  is_free: boolean;
+  is_free?: boolean;
 }
 
 interface Event {
@@ -50,17 +52,21 @@ interface Event {
   title: string;
   slug?: string;
   description?: string;
+  short_description?: string;
   start_date: string;
   end_date?: string;
+  status?: string;
   location: EventLocation;
-  cover_image?: string;
+  cover_image_url?: string;
   organizer: EventOrganizer;
-  pricing: EventPricing;
+  pricing?: EventPricing;
+  tickets?: any[];
   attendee_count: number;
   tickets_available?: number;
   category?: string;
   tags: string[];
-  url: string;
+  is_featured?: boolean;
+  url?: string;
 }
 
 interface EventsResponse {
