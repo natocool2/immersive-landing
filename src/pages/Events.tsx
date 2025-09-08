@@ -507,12 +507,16 @@ const EventQuickView = ({ event, isOpen, onClose }: { event: Event | null; isOpe
   };
 
   const formatPrice = () => {
+    if (!event.pricing) return "Price TBD";
     if (event.pricing.is_free) return "Free Event";
-    const currency = event.pricing.currency === "USD" ? "$" : event.pricing.currency;
+    const currency = event.pricing.currency === "USD" ? "$" : event.pricing.currency || "$";
     if (event.pricing.min_price === event.pricing.max_price) {
-      return `${currency}${event.pricing.min_price}`;
+      return `${currency}${event.pricing.min_price || 0}`;
     }
-    return `From ${currency}${event.pricing.min_price}`;
+    if (event.pricing.min_price !== undefined) {
+      return `From ${currency}${event.pricing.min_price}`;
+    }
+    return "Price TBD";
   };
 
   const locationText = () => {
