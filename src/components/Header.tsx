@@ -4,9 +4,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/EnproAuthContext";
 import UserMenu from "@/components/UserMenu";
+import EcosystemPopup from "@/components/EcosystemPopup";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isEcosystemOpen, setIsEcosystemOpen] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
