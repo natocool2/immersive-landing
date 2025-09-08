@@ -163,6 +163,24 @@ const EventCard = ({ event, onQuickView }: { event: Event; onQuickView: (event: 
     return "Price TBD";
   };
 
+  const formatDate = () => {
+    try {
+      const date = parseISO(event.start_date);
+      const hasEndDate = event.end_date && event.end_date !== event.start_date;
+      
+      if (hasEndDate) {
+        const endDate = parseISO(event.end_date!);
+        if (format(date, 'yyyy-MM-dd') === format(endDate, 'yyyy-MM-dd')) {
+          return `${format(date, 'MMM d, yyyy')} • ${format(date, 'h:mm a')} - ${format(endDate, 'h:mm a')}`;
+        }
+        return `${format(date, 'MMM d')} - ${format(endDate, 'MMM d, yyyy')}`;
+      }
+      return format(date, 'PPp');
+    } catch (error) {
+      return event.start_date;
+    }
+  };
+
   return (
     <Card className="group hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer overflow-hidden">
       <div onClick={() => onQuickView(event)} className="relative">
