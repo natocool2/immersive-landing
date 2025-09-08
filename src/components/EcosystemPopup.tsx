@@ -32,7 +32,7 @@ const ecosystemApps = [
     icon: Users,
     color: "from-green-500 to-green-600",
     url: "https://affine.easynetpro.com",
-    status: "maintenance"
+    status: "active"
   },
   {
     id: 4,
@@ -59,7 +59,7 @@ const ecosystemApps = [
     icon: UserCheck,
     color: "from-pink-500 to-pink-600",
     url: "https://crm.easynetpro.com",
-    status: "coming-soon"
+    status: "active"
   }
 ];
 
