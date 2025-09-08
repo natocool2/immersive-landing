@@ -38,7 +38,12 @@ const Header = () => {
           >
             Pricing
           </Button>
-          <Button variant="ghost" size="icon" className="text-white hover:text-white/80">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-white hover:text-white/80"
+            onClick={() => setIsEcosystemOpen(true)}
+          >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="5" cy="12" r="2" fill="currentColor"/>
               <circle cx="12" cy="12" r="2" fill="currentColor"/>
@@ -67,7 +72,12 @@ const Header = () => {
 
         {/* Mobile/Tablet Navigation */}
         <div className="flex items-center space-x-2 lg:hidden">
-          <Button variant="ghost" size="icon" className="text-white hover:text-white/80">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-white hover:text-white/80"
+            onClick={() => setIsEcosystemOpen(true)}
+          >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="5" cy="12" r="2" fill="currentColor"/>
               <circle cx="12" cy="12" r="2" fill="currentColor"/>
