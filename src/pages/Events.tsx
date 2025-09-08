@@ -146,9 +146,9 @@ const EventCard = ({ event, onQuickView }: { event: Event; onQuickView: (event: 
     }
   };
 
-  const locationText = event.location.is_online 
+  const locationText = event.location?.is_online 
     ? "Online Event" 
-    : event.location.city || event.location.venue_name || "TBA";
+    : event.location?.city || event.location?.venue || "TBA";
 
   return (
     <Card className="group hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer overflow-hidden">
