@@ -134,6 +134,12 @@ const Header = () => {
           </div>
         </nav>
       )}
+
+      {/* Ecosystem Popup */}
+      <EcosystemPopup 
+        isOpen={isEcosystemOpen} 
+        onClose={() => setIsEcosystemOpen(false)} 
+      />
     </header>
   );
 };
