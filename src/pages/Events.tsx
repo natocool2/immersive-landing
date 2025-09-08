@@ -534,9 +534,9 @@ const EventQuickView = ({ event, isOpen, onClose }: { event: Event | null; isOpe
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         {/* Header Image */}
         <div className="relative h-64 -m-6 mb-6 bg-gradient-to-br from-purple-500 to-indigo-600 overflow-hidden">
-          {event.cover_image ? (
+          {event.cover_image_url ? (
             <img 
-              src={event.cover_image} 
+              src={event.cover_image_url} 
               alt={event.title}
               className="w-full h-full object-cover"
             />
