@@ -8,7 +8,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Pricing from "./pages/Pricing";
 import Planos from "./pages/Planos";
-import Events from "./pages/Events";
+import EventsV2 from "./pages/EventsV2";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
