@@ -24,7 +24,12 @@ const Header = () => {
         
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center space-x-8">
-          <Button variant="ghost" size="sm" className="text-white hover:text-white/80">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-white hover:text-white/80"
+            onClick={() => navigate('/ingeniousgen')}
+          >
             Ingenious Gen
           </Button>
           <Button 
