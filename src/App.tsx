@@ -9,6 +9,7 @@ import Auth from "./pages/Auth";
 import Pricing from "./pages/Pricing";
 import Planos from "./pages/Planos";
 import EventsV2 from "./pages/EventsV2";
+import IngeniousGen from "./pages/IngeniousGen";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
