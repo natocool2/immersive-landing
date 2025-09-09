@@ -127,7 +127,12 @@ const Header = () => {
       {isMenuOpen && (
         <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200">
           <div className="flex flex-col space-y-2 pt-4">
-            <Button variant="ghost" size="sm" className="text-white hover:text-white/80 justify-start">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-white hover:text-white/80 justify-start"
+              onClick={() => navigate('/ingeniousgen')}
+            >
               Ingenious Gen
             </Button>
             <Button 
