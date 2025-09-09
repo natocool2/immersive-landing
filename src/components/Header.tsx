@@ -147,7 +147,7 @@ const Header = () => {
               variant="ghost" 
               size="sm" 
               className="text-white hover:text-white/80 justify-start"
-              onClick={() => window.location.href = 'https://easynetpro.com/pricing'}
+              onClick={() => navigate('/pricing')}
             >
               Pricing
             </Button>
